@@ -173,7 +173,7 @@ nav a {
   font-weight: 400;
   position: relative;
   padding: 0.5rem 0;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 header.scrolled nav a {
@@ -187,14 +187,13 @@ nav a::after {
   left: 0;
   width: 0;
   height: 2px;
-  background-color: white;
-  transition:
-    width 0.3s ease,
-    background-color 0.3s ease;
+  background-color: currentColor;
+  transition: width 0.3s ease;
+  opacity: 0.7;
 }
 
 header.scrolled nav a::after {
-  background-color: #333;
+  background-color: currentColor;
 }
 
 .language-toggle {
@@ -347,5 +346,9 @@ footer {
 nav a:hover::after,
 nav a.router-link-active::after {
   width: 100%;
+}
+
+nav a:hover {
+  opacity: 0.7;
 }
 </style>
