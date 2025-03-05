@@ -118,11 +118,11 @@ const { t } = useI18n()
 }
 
 .work-preview.funguy {
-  background-image: url('https://via.placeholder.com/800x600?text=Fun-guy');
+  background-image: url('/images/funguy1.jpg');
 }
 
 .work-preview.rainbow {
-  background-image: url('https://via.placeholder.com/800x600?text=Varaviksne');
+  background-image: url('/images/rainbow-full.jpg');
 }
 
 .work-info {

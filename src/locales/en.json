@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Home",
+    "portfolio": "Portfolio",
+    "biography": "Biography",
+    "exhibitions": "Exhibitions",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Ilze Erba-Brenholma",
+    "subtitle": "Textile Artist"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "intro": "Exploring the intersection of natural materials and contemporary art through textile installations and sculptural forms.",
+    "works": {
+      "funguy": {
+        "title": "Fun-guy",
+        "description": "An installation consisting of four light objects. Each object functions both as an independent artwork and a functional light fixture. Each individual object measures 150x30x30cm. The illuminated, brownish translucent part - the \"lampshade\" is made using cellulose fiber grown by the author using symbiotic bacterial culture.",
+        "material": "Cellulose fiber, Symbiotic bacterial culture",
+        "category": "Light Installation"
+      },
+      "rainbow": {
+        "title": "Varavīksnene",
+        "description": "Located in the middle of the exhibition, this object made of wool, polyester, and composite materials features a rainbow-colored eye observing the space. It challenges viewers to contemplate how differently each person might perceive the same view.",
+        "material": "Wool, Polyester, Composite materials",
+        "category": "Textile Installation"
+      }
+    },
+    "details": {
+      "year": "Year",
+      "material": "Material",
+      "dimensions": "Dimensions"
+    }
+  },
+  "biography": {
+    "title": "Biography",
+    "intro": "Based in Riga, Latvia, I create textile art that bridges traditional craft techniques with contemporary artistic expression. My work explores the boundaries between functional objects and artistic installations, often incorporating innovative materials and sustainable practices.",
+    "timeline": "Timeline",
+    "achievements": "Achievements",
+    "contact": "Get in Touch",
+    "content": "Ilze Erba-Brenholma is a Latvian textile artist focusing on digital embroidery and textile art. Her work explores feminist themes and gender issues through ready-made techniques and traditional textiles, including digital weaving and batik."
+  }
+}

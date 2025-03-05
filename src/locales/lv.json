@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Sākums",
+    "portfolio": "Portfolio",
+    "biography": "Biogrāfija",
+    "exhibitions": "Izstādes",
+    "contact": "Kontakti"
+  },
+  "home": {
+    "title": "Ilze Erba-Brenholma",
+    "subtitle": "Tekstilmāksliniece"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "intro": "Izpētot dabisko materiālu un laikmetīgās mākslas krustpunktu caur tekstila instalācijām un skulpturālām formām.",
+    "works": {
+      "funguy": {
+        "title": "Fun-guy",
+        "description": "Instalācija, kas sastāv no četriem gaismas objektiem. Katrs objekts darbojas gan kā neatkarīgs mākslas darbs, gan kā funkcionāls gaismas ķermenis. Katra atsevišķā objekta izmēri ir 150x30x30cm. Apgaismotā, brūnganā caurspīdīgā daļa - \"lampas abažūrs\" ir izgatavots, izmantojot autores audzētu celulozes šķiedru ar simbiotisko baktēriju kultūru.",
+        "material": "Celulozes šķiedra, Simbiotiskā baktēriju kultūra",
+        "category": "Gaismas Instalācija"
+      },
+      "rainbow": {
+        "title": "Varavīksnene",
+        "description": "Izstādes centrā novietotais objekts, kas izgatavots no vilnas, poliestera un kompozītmateriāliem, attēlo varavīksnes krāsu aci, kas vēro telpu. Tas aicina skatītājus pārdomāt, cik atšķirīgi katrs cilvēks varētu uztvert vienu un to pašu skatu.",
+        "material": "Vilna, Poliesters, Kompozītmateriāli",
+        "category": "Tekstila Instalācija"
+      }
+    },
+    "details": {
+      "year": "Gads",
+      "material": "Materiāls",
+      "dimensions": "Izmēri"
+    }
+  },
+  "biography": {
+    "title": "Biogrāfija",
+    "intro": "Bāzēta Rīgā, Latvijā, es veidoju tekstilmākslu, kas apvieno tradicionālās amatniecības tehnikas ar laikmetīgo māksliniecisko izteiksmi. Mans darbs pēta robežas starp funkcionāliem objektiem un mākslas instalācijām, bieži iekļaujot inovatīvus materiālus un ilgtspējīgas prakses.",
+    "timeline": "Hronoloģija",
+    "achievements": "Sasniegumi",
+    "contact": "Sazināties",
+    "content": "Ilze Erba-Brenholma ir latviešu tekstilmāksliniece, kas specializējas digitālajā izšūšanā un tekstilmākslā. Viņas darbi pēta feminisma tēmas un dzimuma jautājumus caur gatavo tehniku un tradicionālo tekstilizstrādājumu prizmu, ieskaitot digitālo aušanu un batiku."
+  }
+}

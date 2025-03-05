@@ -297,6 +297,9 @@ footer {
   }
 
   nav.mobile-open {
+    background-color: #000;
+    color: white;
+    border-color: white;
     transform: translateX(0);
     opacity: 1;
     pointer-events: all;
@@ -304,15 +307,15 @@ footer {
 
   nav a,
   header.scrolled nav a {
-    color: #333;
+    color: white;
     font-size: 1.5rem;
     margin: 1rem 0;
   }
 
   .language-toggle {
     margin-top: 1rem;
-    border-color: #333;
-    color: #333;
+    border-color: white;
+    color: white;
   }
 }
 

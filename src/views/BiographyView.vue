@@ -19,7 +19,6 @@ const timeline = [
     title: 'Group Exhibition "Textile Innovations"',
     location: 'Design Museum, Copenhagen',
   },
-  // Add more timeline events
 ]
 
 const achievements = [
@@ -33,7 +32,6 @@ const achievements = [
     year: '2022',
     organization: 'Nordic Culture Fund',
   },
-  // Add more achievements
 ]
 </script>
 

@@ -1,42 +1,98 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const { t } = useI18n()
 
-const works = [
+const getWorks = () => [
   {
     id: 'funguy',
     title: t('portfolio.works.funguy.title'),
     description: t('portfolio.works.funguy.description'),
     year: '2023',
-    material: 'Silk, Natural Dyes',
-    dimensions: '120cm × 80cm',
-    image: '/images/funguy-full.jpg',
-    category: 'Textile Art',
+    material: t('portfolio.works.funguy.material'),
+    dimensions: '150x30x30cm',
+    images: [
+      {
+        url: '/images/funguy-full.jpg',
+        alt: 'Fun-guy installation full view',
+      },
+      {
+        url: '/images/funguy1.jpg',
+        alt: 'Fun-guy installation detail 1',
+      },
+      {
+        url: '/images/hero-bg.jpg',
+        alt: 'Fun-guy installation detail 3',
+      },
+      {
+        url: '/images/funguy4.jpg',
+        alt: 'Fun-guy installation detail 2',
+      },
+    ],
+    thumbnailIndex: 0,
+    category: t('portfolio.works.funguy.category'),
   },
   {
     id: 'rainbow',
     title: t('portfolio.works.rainbow.title'),
     description: t('portfolio.works.rainbow.description'),
     year: '2023',
-    material: 'Cotton, Synthetic Dyes',
-    dimensions: '200cm × 150cm',
-    image: '/images/rainbow-full.jpg',
-    category: 'Installation',
+    material: t('portfolio.works.rainbow.material'),
+    dimensions: '200x150cm',
+    images: [
+      {
+        url: '/images/rainbow-full.jpg',
+        alt: 'Varavīksnene full view',
+      },
+    ],
+    thumbnailIndex: 0,
+    category: t('portfolio.works.rainbow.category'),
   },
 ]
 
+const works = computed(() => getWorks())
+
 const selectedWork = ref(null)
+const currentImageIndex = ref(0)
 
 const openWork = (work) => {
   selectedWork.value = work
+  currentImageIndex.value = 0
   document.body.style.overflow = 'hidden'
+  document.body.style.position = 'fixed'
+  document.body.style.width = '100%'
+  document.body.style.top = `-${window.scrollY}px`
 }
 
 const closeWork = () => {
+  const scrollY = document.body.style.top
+  document.body.style.position = ''
+  document.body.style.width = ''
+  document.body.style.top = ''
+  document.body.style.overflow = ''
+  window.scrollTo(0, parseInt(scrollY || '0') * -1)
   selectedWork.value = null
-  document.body.style.overflow = 'auto'
+  currentImageIndex.value = 0
+}
+
+const nextImage = () => {
+  if (selectedWork.value) {
+    currentImageIndex.value = (currentImageIndex.value + 1) % selectedWork.value.images.length
+  }
+}
+
+const prevImage = () => {
+  if (selectedWork.value) {
+    currentImageIndex.value =
+      currentImageIndex.value === 0
+        ? selectedWork.value.images.length - 1
+        : currentImageIndex.value - 1
+  }
+}
+
+const goToImage = (index) => {
+  currentImageIndex.value = index
 }
 </script>
 
@@ -49,7 +105,10 @@ const closeWork = () => {
 
     <div class="works-grid">
       <div v-for="work in works" :key="work.id" class="work-item" @click="openWork(work)">
-        <div class="work-image" :style="{ backgroundImage: 'url(' + work.image + ')' }">
+        <div
+          class="work-image"
+          :style="{ backgroundImage: 'url(' + work.images[work.thumbnailIndex].url + ')' }"
+        >
           <div class="work-overlay">
             <div class="work-info">
               <h2>{{ work.title }}</h2>
@@ -67,23 +126,54 @@ const closeWork = () => {
       </button>
 
       <div class="modal-content">
-        <div class="modal-image" :style="{ backgroundImage: 'url(' + selectedWork.image + ')' }">
-          <div class="modal-image-overlay"></div>
+        <div class="modal-image-container">
+          <div
+            class="modal-image"
+            :style="{ backgroundImage: 'url(' + selectedWork.images[currentImageIndex].url + ')' }"
+          >
+            <div class="modal-image-overlay"></div>
+          </div>
+
+          <!-- Image Navigation -->
+          <button
+            v-if="selectedWork.images.length > 1"
+            class="nav-button prev"
+            @click.stop="prevImage"
+          >
+            ‹
+          </button>
+          <button
+            v-if="selectedWork.images.length > 1"
+            class="nav-button next"
+            @click.stop="nextImage"
+          >
+            ›
+          </button>
+
+          <!-- Image Indicators -->
+          <div v-if="selectedWork.images.length > 1" class="image-indicators">
+            <button
+              v-for="(image, index) in selectedWork.images"
+              :key="index"
+              :class="['indicator', { active: currentImageIndex === index }]"
+              @click.stop="goToImage(index)"
+            ></button>
+          </div>
         </div>
 
         <div class="modal-info">
           <h2>{{ selectedWork.title }}</h2>
           <div class="work-details">
             <div class="detail-item">
-              <span class="detail-label">Year</span>
+              <span class="detail-label">{{ t('portfolio.details.year') }}</span>
               <span class="detail-value">{{ selectedWork.year }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Material</span>
+              <span class="detail-label">{{ t('portfolio.details.material') }}</span>
               <span class="detail-value">{{ selectedWork.material }}</span>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Dimensions</span>
+              <span class="detail-label">{{ t('portfolio.details.dimensions') }}</span>
               <span class="detail-value">{{ selectedWork.dimensions }}</span>
             </div>
           </div>
@@ -126,11 +216,11 @@ const closeWork = () => {
 
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
   gap: 2px;
   background-color: #111;
   padding: 2px;
-  max-width: 1800px;
+  width: min(1800px, 100%);
   margin: 0 auto;
 }
 
@@ -139,6 +229,7 @@ const closeWork = () => {
   cursor: pointer;
   aspect-ratio: 4/5;
   overflow: hidden;
+  min-width: 0; /* Prevent overflow in grid items */
 }
 
 .work-image {
@@ -204,6 +295,7 @@ const closeWork = () => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  overflow: hidden;
 }
 
 .close-button {
@@ -234,10 +326,19 @@ const closeWork = () => {
   width: 100%;
   height: 80vh;
   background-color: #111;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-image-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
 }
 
 .modal-image {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -248,6 +349,23 @@ const closeWork = () => {
   padding: 3rem;
   background-color: #111;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.modal-info::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-info::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-info::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 .modal-info h2 {
@@ -283,24 +401,95 @@ const closeWork = () => {
   color: rgba(255, 255, 255, 0.8);
 }
 
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 50px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 2;
+}
+
+.nav-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.nav-button.prev {
+  left: 0;
+}
+
+.nav-button.next {
+  right: 0;
+}
+
+.image-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.indicator.active {
+  background: white;
+}
+
+@media (min-width: 1025px) {
+  .works-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(600px, 100%), 1fr));
+  }
+}
+
 @media (max-width: 1024px) {
   .works-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
   }
 
   .modal-content {
     flex-direction: column;
-    height: auto;
+    height: 90vh;
     max-height: 90vh;
+    overflow: hidden;
   }
 
   .modal-image {
     height: 50vh;
+    min-height: 300px;
   }
 
   .modal-info {
     width: 100%;
+    height: auto;
+    max-height: 40vh;
     padding: 2rem;
+  }
+
+  .nav-button {
+    width: 40px;
+    height: 60px;
+    font-size: 1.5rem;
   }
 }
 
@@ -338,6 +527,12 @@ const closeWork = () => {
 
   .modal-info h2 {
     font-size: 2rem;
+  }
+
+  .nav-button {
+    width: 35px;
+    height: 50px;
+    font-size: 1.2rem;
   }
 }
 </style>
