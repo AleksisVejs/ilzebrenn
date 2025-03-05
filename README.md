@@ -6,14 +6,7 @@ This is a portfolio website for Ilze Erba-Brenholma, a textile artist. The site 
 
 This project is configured for automatic deployment to GitHub Pages. When you push changes to the `main` branch, the site will be automatically built and deployed to GitHub Pages.
 
-You can access the live site at: https://[your-github-username].github.io/ilzebrenn/
-
-### Custom Domain Setup
-
-To use a custom domain:
-
-1. Update the `public/CNAME` file with your domain name
-2. Configure your DNS settings as described in [GitHub Pages documentation](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site)
+You can access the live site at: https://aleksisvejs.github.io/ilzebrenn/
 
 ## Recommended IDE Setup
 

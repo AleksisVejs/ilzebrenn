@@ -49,6 +49,46 @@ const getWorks = () => [
     thumbnailIndex: 0,
     category: t('portfolio.works.rainbow.category'),
   },
+  {
+    id: 'atgazend',
+    title: t('portfolio.works.atgazend.title'),
+    description: t('portfolio.works.atgazend.description'),
+    year: '2024',
+    material: t('portfolio.works.atgazend.material'),
+    dimensions: t('portfolio.works.atgazend.dimensions'),
+    images: [
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene.JPG`,
+        alt: 'Atgazend installation main view',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene1.jpg`,
+        alt: 'Atgazend installation detail 1',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene2.jpg`,
+        alt: 'Atgazend installation detail 2',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene3.jpg`,
+        alt: 'Atgazend installation detail 3',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene4.jpg`,
+        alt: 'Atgazend installation detail 4',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene5.jpg`,
+        alt: 'Atgazend installation detail 5',
+      },
+      {
+        url: `${import.meta.env.BASE_URL}images/atgazene6.JPG`,
+        alt: 'Atgazend installation detail 6',
+      },
+    ],
+    thumbnailIndex: 0,
+    category: t('portfolio.works.atgazend.category'),
+  },
 ]
 
 const works = computed(() => getWorks())
@@ -216,7 +256,7 @@ const goToImage = (index) => {
 
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2px;
   background-color: #111;
   padding: 2px;
@@ -456,15 +496,9 @@ const goToImage = (index) => {
   background: white;
 }
 
-@media (min-width: 1025px) {
+@media (max-width: 1200px) {
   .works-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(600px, 100%), 1fr));
-  }
-}
-
-@media (max-width: 1024px) {
-  .works-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .modal-content {

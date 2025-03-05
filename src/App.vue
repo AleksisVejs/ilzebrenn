@@ -75,7 +75,7 @@ onUnmounted(() => {
     </main>
 
     <footer>
-      <p>&copy; {{ new Date().getFullYear() }} Ilze Erba-Brenholma</p>
+      <p>&copy; {{ new Date().getFullYear() }} Ilze Brenn</p>
     </footer>
   </div>
 </template>

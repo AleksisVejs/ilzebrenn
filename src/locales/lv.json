@@ -7,7 +7,7 @@
     "contact": "Kontakti"
   },
   "home": {
-    "title": "Ilze Erba-Brenholma",
+    "title": "Ilze Brenn",
     "subtitle": "Tekstilmāksliniece"
   },
   "portfolio": {
@@ -25,6 +25,13 @@
         "description": "Izstādes centrā novietotais objekts, kas izgatavots no vilnas, poliestera un kompozītmateriāliem, attēlo varavīksnes krāsu aci, kas vēro telpu. Tas aicina skatītājus pārdomāt, cik atšķirīgi katrs cilvēks varētu uztvert vienu un to pašu skatu.",
         "material": "Vilna, Poliesters, Kompozītmateriāli",
         "category": "Tekstila Instalācija"
+      },
+      "atgazend": {
+        "title": "Atgazend",
+        "description": "Tekstila grafiti instalācija Atgāzenes stacijā Rīgā, Latvijas mazākajā apkaimē (0.745 kv.km). Šis darbs kalpo kā svinīgas atvadas no stacijas, kuru plānots slēgt, izmantojot tekstilu kā neierastu mediju, lai godinātu apkaimes identitāti. Tekstila grafiti trauslā daba atspoguļo teritorijas ievainojamību, kura var tikt absorbēta apkārtējos rajonos. Projekts veido neverbālu dialogu ar ielu māksliniekiem, pārvēršot stacijas nosaukumu par pārejošā rakstura un ikdienas dzīves svinēšanas simbolu.",
+        "material": "Tekstila materiāli, Ielu mākslas instalācija",
+        "category": "Tekstila Grafiti Instalācija",
+        "dimensions": "Apkaimes specifiska instalācija"
       }
     },
     "details": {
@@ -35,19 +42,23 @@
   },
   "biography": {
     "title": "Biogrāfija",
-    "intro": "Dzīvoju un strādāju Rīgā, Latvijā. Esmu tekstilmāksliniece, kas pazīstama ar savu darbu tekstila un instalāciju mākslas jomā, pētot tradicionālo tehniku un mūsdienu tēmu krustpunktus.",
+    "intro": "Multikulturāla - starpdimensionāla personība, kurai patīk dzīvot sapņu pasaulē cenšoties noturēties pie zemes un tajā atrodamām kultūrām.",
     "timeline": "Laika līnija un sasniegumi",
     "background": {
       "title": "Pamatinformācija un karjeras sākums",
-      "content": "Profesionāli pazīstama gan kā Ilze Brenn, gan Ilze Erba-Brenholma, es studēju Latvijas Mākslas akadēmijā, kur attīstīju savu unikālo pieeju tekstilmākslai, apvienojot tradicionālo amatniecību ar mūsdienu mākslas izpausmi."
+      "content": "Profesionāli pazīstama kā Ilze Brenn, es studēju Latvijas Mākslas akadēmijā, kur attīstīju savu unikālo pieeju tekstilmākslai, apvienojot tradicionālo amatniecību ar mūsdienu mākslas izpausmi."
     },
     "exhibitions": {
-      "title": "Nozīmīgā izstāde (2019)",
-      "content": "Būtisks pagrieziena punkts manā karjerā bija izstāde 'Studentu dienasgrāmatas III. Tekstils' no 2019. gada 2. marta līdz 22. aprīlim. Mana instalācija 'Cikliskā diagonāle' pārveidoja apģērbu ar dzimumu lomu stereotipiem abstraktā formā, izmantojot digitālo aušanu, batiku un izšūšanas tehnikas."
+      "title": "Dalība izstādēs",
+      "content": "2024 \"Pašportrets\" Siguldas Pils kvartāls \"Vieta Nr.6\"\n2024 \"Pavediens\" galerija \"LOOK\"\n2020 Nematerialās kultūras mantojuma centrs UPĪTE\n2019 \"Studentu dienasgrāmatas 3\" Dubultu mākslas stacija\n2019 \"Process\" Tukuma audēju darbnīca\n2019 \"Māls un pavediens\" Kuldīgas mākslinieku rezidence\n2019 \"Uz pirkstu galiem\" J. Rozentāla un R. Blaumaņa muzejs\n2018 \"Lietu daba\" Kalnciema Kvartāla galerija\n2018 Tekstila kolektīvā izstāde Rīgas Dizaina un mākslas vidusskola\n2018 \"Divi Jūliji\"-\"100% Tekstils\" Gulbenes Sarkanā pils\n2017 \"Tekstila miniatūru izstāde\" Ģ. Eliasa Jelgavas vēstures un mākslas muzejs\n2017 \"Kate Derum and the Irene Davies Awards for Small Tapestries\" The Australian Tapestry Workshop"
     },
     "workshops": {
-      "title": "Darbnīcas un sabiedriskā darbība",
-      "content": "Es aktīvi iesaistos mākslas kopienā, vadot atvērtās darbnīcas par digitālo izšūšanu, daloties ar savu pieredzi un tehnikām ar topošajiem māksliniekiem un interesentiem."
+      "title": "Dalība radošās programmās",
+      "content": "2024 Marije Vogelzang NL meistarklase par Ēdiena dizainu BKUS, LMA studenti un RSU Mākslas terapijas un Uztura programmas studenti kā arī BKUS medicīniskais personāls.\n2024 Rianne Makkink NL \"Waterschool\"\n2024 Berlin Affordable Art Market \"BAAM Berlin #7\" DE\n2024 The lost-and-found conference, Lost and Found office, Riga\n2023 LAB University of Applied Sciences, Lahti, Finland\n2020 Tekstilmākslas simpozijs Upītes kultīrtelpā\n2020 Annika Kiidron-Roomets LT\"Stories of our clothes\"\n2019 Sarah Schweisig DE \"Reuse-Reduce-Recycle. Meaning of sustainability\"\n2019 Laura Pavionyte LT filcēšanas meistarklase\n2019 Lukas Anu Tomaševičus LT \"Indigo/Preperation/Technologi\"\n2019 Irita Ozoliņa \"Digitālo atkārtojumu rakstu veidošana\"\n2019 Glenn Vilppu USA \"Figure Drawing and Composition Workshop\"\n2019 Aleksejs Naumovs LV \"Plenērs\""
+    },
+    "education": {
+      "title": "Izglītība",
+      "content": "2023 - šim brīdim Latvijas Mākslas akadēmija (Maģistrantūra)\n2016 – 2020 Latvijas Mākslas akadēmija (Bakalaura grāds mākslā)"
     },
     "current": {
       "title": "Pašreizējais fokuss",
@@ -58,6 +69,9 @@
     "intro": "Sazinieties ar mani par sadarbību, izstādēm vai jebkādiem jautājumiem par manu darbu.",
     "email": "E-pasts",
     "email_desc": "Saziņai par pasūtījumiem, izstādēm vai sadarbību",
+    "phone": "Tālrunis",
+    "phone_number": "+371 25152311",
+    "phone_desc": "Saziņai par sadarbību un izstādēm",
     "instagram": "Instagram",
     "instagram_desc": "Sekojiet maniem jaunākajiem darbiem un aizkulisēm",
     "location": "Atrašanās vieta",

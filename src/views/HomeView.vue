@@ -25,6 +25,13 @@ const { t } = useI18n()
           <router-link to="/portfolio" class="view-more">{{ t('nav.portfolio') }}</router-link>
         </div>
       </div>
+
+      <div class="work-preview atgazend">
+        <div class="work-info">
+          <h2>Atgazend</h2>
+          <router-link to="/portfolio" class="view-more">{{ t('nav.portfolio') }}</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -125,6 +132,10 @@ const { t } = useI18n()
   background-image: url('/ilzebrenn/images/rainbow-full.jpg');
 }
 
+.work-preview.atgazend {
+  background-image: url('/ilzebrenn/images/atgazene.JPG');
+}
+
 .work-info {
   position: absolute;
   bottom: 0;
@@ -156,7 +167,7 @@ const { t } = useI18n()
 
 @media (min-width: 768px) {
   .featured-works {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
   }
 
@@ -171,7 +182,7 @@ const { t } = useI18n()
 
 @media (min-width: 1400px) {
   .featured-works {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
   }
 

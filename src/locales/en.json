@@ -7,7 +7,7 @@
     "contact": "Contact"
   },
   "home": {
-    "title": "Ilze Erba-Brenholma",
+    "title": "Ilze Brenn",
     "subtitle": "Textile Artist"
   },
   "portfolio": {
@@ -25,6 +25,13 @@
         "description": "Located in the middle of the exhibition, this object made of wool, polyester, and composite materials features a rainbow-colored eye observing the space. It challenges viewers to contemplate how differently each person might perceive the same view.",
         "material": "Wool, Polyester, Composite materials",
         "category": "Textile Installation"
+      },
+      "atgazend": {
+        "title": "Atgazend",
+        "description": "A textile graffiti installation at Atgāzene station in Riga, Latvia's smallest neighborhood (0.745 sq km). This work serves as a festive farewell to the station slated for closure, using textile as an unconventional medium to honor the neighborhood's identity. The fragile nature of textile graffiti mirrors the vulnerability of the area, which may be absorbed by surrounding districts. The project creates a non-verbal dialogue with street artists, transforming the station's name into a symbol of impermanence and celebration of everyday life.",
+        "material": "Textile materials, Street art installation",
+        "category": "Textile Graffiti Installation",
+        "dimensions": "Site-specific installation"
       }
     },
     "details": {
@@ -35,19 +42,23 @@
   },
   "biography": {
     "title": "Biography",
-    "intro": "Based in Riga, Latvia, I am a textile artist known for my work in textiles and installation art, exploring the intersection of traditional techniques and contemporary themes.",
+    "intro": "A multicultural - interdimensional personality who enjoys living in a dream world while trying to stay grounded and connected to the cultures found on Earth.",
     "timeline": "Timeline and Achievements",
     "background": {
       "title": "Background and Early Career",
-      "content": "Known professionally as both Ilze Brenn and Ilze Erba-Brenholma, I studied at the Art Academy of Latvia, where I developed my unique approach to textile art combining traditional craftsmanship with contemporary artistic expression."
+      "content": "Known professionally as Ilze Brenn, I studied at the Art Academy of Latvia, where I developed my unique approach to textile art combining traditional craftsmanship with contemporary artistic expression."
     },
     "exhibitions": {
-      "title": "Notable Exhibition (2019)",
-      "content": "A significant milestone in my career was the exhibition 'Studentu dienasgrāmatas III. Tekstils' (Students' Journals III. Textile) from March 2 to April 22, 2019. My installation 'Cikliskā diagonāle' transformed clothing with gender role stereotypes into an abstract form using digital weaving, batik, and embroidery techniques."
+      "title": "Exhibition Participation",
+      "content": "2024 \"Self-portrait\" Sigulda Castle Quarter \"Place No.6\"\n2024 \"Thread\" gallery \"LOOK\"\n2020 Intangible Cultural Heritage Center UPĪTE\n2019 \"Student Diaries 3\" Dubulti Art Station\n2019 \"Process\" Tukums Weaving Workshop\n2019 \"Clay and Thread\" Kuldīga Artists Residence\n2019 \"On Tiptoes\" J. Rozentāls and R. Blaumanis Museum\n2018 \"Nature of Things\" Kalnciema Quarter Gallery\n2018 Textile Collective Exhibition Riga Design and Art School\n2018 \"Two Julys\"-\"100% Textile\" Gulbene Red Castle\n2017 \"Textile Miniature Exhibition\" Ģ. Eliass Jelgava History and Art Museum\n2017 \"Kate Derum and the Irene Davies Awards for Small Tapestries\" The Australian Tapestry Workshop"
     },
     "workshops": {
-      "title": "Workshops and Public Engagement",
-      "content": "I actively engage with the art community through open workshops on digital embroidery, sharing my expertise and techniques with aspiring artists and enthusiasts."
+      "title": "Creative Program Participation",
+      "content": "2024 Marije Vogelzang NL masterclass on Food Design at BKUS, with LMA students and RSU Art Therapy and Nutrition program students as well as BKUS medical personnel.\n2024 Rianne Makkink NL \"Waterschool\"\n2024 Berlin Affordable Art Market \"BAAM Berlin #7\" DE\n2024 The lost-and-found conference, Lost and Found office, Riga\n2023 LAB University of Applied Sciences, Lahti, Finland\n2020 Textile Art Symposium at Upīte Cultural Space\n2020 Annika Kiidron-Roomets LT \"Stories of our clothes\"\n2019 Sarah Schweisig DE \"Reuse-Reduce-Recycle. Meaning of sustainability\"\n2019 Laura Pavionyte LT felting masterclass\n2019 Lukas Anu Tomaševičus LT \"Indigo/Preperation/Technologi\"\n2019 Irita Ozoliņa \"Creating Digital Repeat Patterns\"\n2019 Glenn Vilppu USA \"Figure Drawing and Composition Workshop\"\n2019 Aleksejs Naumovs LV \"Plein Air\""
+    },
+    "education": {
+      "title": "Education",
+      "content": "2023 - present Art Academy of Latvia (Master's degree)\n2016 – 2020 Art Academy of Latvia (Bachelor's degree in Art)"
     },
     "current": {
       "title": "Current Focus",
@@ -58,6 +69,9 @@
     "intro": "Contact me for collaborations, exhibitions, or any inquiries about my work.",
     "email": "Email",
     "email_desc": "For inquiries about commissions, exhibitions, or collaborations",
+    "phone": "Phone",
+    "phone_number": "+371 25152311",
+    "phone_desc": "For collaborations and exhibitions",
     "instagram": "Instagram",
     "instagram_desc": "Follow my latest work and behind-the-scenes content",
     "location": "Location",
