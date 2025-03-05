@@ -54,7 +54,7 @@ const { t } = useI18n()
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: url('/ilzebrenn/images/hero-bg.jpg');
+  background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -125,15 +125,15 @@ const { t } = useI18n()
 }
 
 .work-preview.funguy {
-  background-image: url('/ilzebrenn/images/funguy1.jpg');
+  background-image: url('/images/funguy1.jpg');
 }
 
 .work-preview.rainbow {
-  background-image: url('/ilzebrenn/images/rainbow-full.jpg');
+  background-image: url('/images/rainbow-full.jpg');
 }
 
 .work-preview.atgazend {
-  background-image: url('/ilzebrenn/images/atgazene.JPG');
+  background-image: url('/images/atgazene.JPG');
 }
 
 .work-info {

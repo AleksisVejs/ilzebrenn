@@ -14,19 +14,19 @@ const getWorks = () => [
     dimensions: '150x30x30cm',
     images: [
       {
-        url: `${import.meta.env.BASE_URL}images/funguy-full.jpg`,
+        url: '/images/funguy-full.jpg',
         alt: 'Fun-guy installation full view',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/funguy1.jpg`,
+        url: '/images/funguy1.jpg',
         alt: 'Fun-guy installation detail 1',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/hero-bg.jpg`,
+        url: '/images/hero-bg.jpg',
         alt: 'Fun-guy installation detail 3',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/funguy4.jpg`,
+        url: '/images/funguy4.jpg',
         alt: 'Fun-guy installation detail 2',
       },
     ],
@@ -42,7 +42,7 @@ const getWorks = () => [
     dimensions: '200x150cm',
     images: [
       {
-        url: `${import.meta.env.BASE_URL}images/rainbow-full.jpg`,
+        url: '/images/rainbow-full.jpg',
         alt: 'Varavīksnene full view',
       },
     ],
@@ -58,31 +58,31 @@ const getWorks = () => [
     dimensions: t('portfolio.works.atgazend.dimensions'),
     images: [
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene.JPG`,
+        url: '/images/atgazene.JPG',
         alt: 'Atgazend installation main view',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene1.jpg`,
+        url: '/images/atgazene1.jpg',
         alt: 'Atgazend installation detail 1',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene2.jpg`,
+        url: '/images/atgazene2.jpg',
         alt: 'Atgazend installation detail 2',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene3.jpg`,
+        url: '/images/atgazene3.jpg',
         alt: 'Atgazend installation detail 3',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene4.jpg`,
+        url: '/images/atgazene4.jpg',
         alt: 'Atgazend installation detail 4',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene5.jpg`,
+        url: '/images/atgazene5.jpg',
         alt: 'Atgazend installation detail 5',
       },
       {
-        url: `${import.meta.env.BASE_URL}images/atgazene6.JPG`,
+        url: '/images/atgazene6.JPG',
         alt: 'Atgazend installation detail 6',
       },
     ],
