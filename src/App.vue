@@ -7,12 +7,34 @@ const { t, locale } = useI18n()
 const showMobileMenu = ref(false)
 const isScrolled = ref(false)
 
-// Minimal URL cleanup function
+// Robust URL cleanup function for GitHub Pages
 const cleanupUrl = () => {
-  // If pathname contains /? or search exists, fix the URL
-  if (window.location.pathname.includes('/?') || window.location.search) {
+  const location = window.location
+
+  // Check if we're in a redirect loop with endless ~and~ parameters
+  if (
+    location.search &&
+    location.search.includes('~and~') &&
+    location.search.split('~and~').length > 3
+  ) {
+    // Extract the path from the query parameter (GitHub Pages SPA pattern)
+    const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
+    if (pathMatch && pathMatch[1]) {
+      // Get just the clean path without parameters
+      const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+      // Replace URL with the clean path
+      window.history.replaceState(null, null, cleanPath)
+      return
+    }
+  }
+
+  // Handle normal cases
+  if (
+    location.pathname.includes('/?') ||
+    (location.search && (location.search.includes('/?') || location.search.includes('~and~')))
+  ) {
     // Get the clean path
-    const path = window.location.pathname.split('/?')[0]
+    const path = location.pathname.split('/?')[0]
     window.history.replaceState(null, null, path)
   }
 }

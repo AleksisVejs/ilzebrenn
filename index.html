@@ -6,24 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Ilze Erba-Brenholma - Textile Artist Portfolio" />
     <title>Ilzebrenn</title>
-    <!-- Simple redirect for SPA -->
+    <!-- Advanced redirect handling for SPA on GitHub Pages -->
     <script type="text/javascript">
       ;(function () {
-        // If URL has a query string starting with /?
-        if (window.location.search && window.location.search.startsWith('/?')) {
-          // Remove any existing query parameters and use only the clean path
-          var path = window.location.pathname
-          if (path.includes('/?')) {
-            path = path.split('/?')[0]
-          }
+        const location = window.location
 
-          // Replace entire URL with the clean path
+        // Check if we need to process a GitHub Pages SPA redirect
+        if (
+          location.search &&
+          (location.search.startsWith('/?/') || location.search.includes('~and~'))
+        ) {
+          // Extract the path from the query parameter (GitHub Pages SPA pattern)
+          const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
+
+          if (pathMatch && pathMatch[1]) {
+            // Get just the clean path without parameters
+            const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+
+            // Replace URL with the clean path and stop any potential redirect loops
+            window.history.replaceState(null, null, cleanPath)
+
+            // If we still have problematic URL patterns, do a hard redirect as last resort
+            if (
+              window.location.search.includes('~and~') &&
+              window.location.search.split('~and~').length > 3
+            ) {
+              window.location.href = cleanPath
+            }
+          }
+        }
+        // Handle simpler case with pathname containing /?
+        else if (location.pathname.includes('/?')) {
+          const path = location.pathname.split('/?')[0]
           window.history.replaceState(null, null, path)
-
-          // Force reload if we have persistent issues
-          if (window.location.search || window.location.pathname.includes('/?')) {
-            window.location.href = path
-          }
         }
       })()
     </script>
