@@ -35,10 +35,32 @@
   },
   "biography": {
     "title": "Biography",
-    "intro": "Based in Riga, Latvia, I create textile art that bridges traditional craft techniques with contemporary artistic expression. My work explores the boundaries between functional objects and artistic installations, often incorporating innovative materials and sustainable practices.",
-    "timeline": "Timeline",
-    "achievements": "Achievements",
-    "contact": "Get in Touch",
-    "content": "Ilze Erba-Brenholma is a Latvian textile artist focusing on digital embroidery and textile art. Her work explores feminist themes and gender issues through ready-made techniques and traditional textiles, including digital weaving and batik."
+    "intro": "Based in Riga, Latvia, I am a textile artist known for my work in textiles and installation art, exploring the intersection of traditional techniques and contemporary themes.",
+    "timeline": "Timeline and Achievements",
+    "background": {
+      "title": "Background and Early Career",
+      "content": "Known professionally as both Ilze Brenn and Ilze Erba-Brenholma, I studied at the Art Academy of Latvia, where I developed my unique approach to textile art combining traditional craftsmanship with contemporary artistic expression."
+    },
+    "exhibitions": {
+      "title": "Notable Exhibition (2019)",
+      "content": "A significant milestone in my career was the exhibition 'Studentu dienasgrāmatas III. Tekstils' (Students' Journals III. Textile) from March 2 to April 22, 2019. My installation 'Cikliskā diagonāle' transformed clothing with gender role stereotypes into an abstract form using digital weaving, batik, and embroidery techniques."
+    },
+    "workshops": {
+      "title": "Workshops and Public Engagement",
+      "content": "I actively engage with the art community through open workshops on digital embroidery, sharing my expertise and techniques with aspiring artists and enthusiasts."
+    },
+    "current": {
+      "title": "Current Focus",
+      "content": "I remain active in Latvia's art scene, continuing to explore the boundaries between traditional textiles and contemporary art while addressing important social themes through my work."
+    }
+  },
+  "contact": {
+    "intro": "Get in touch with me for collaborations, exhibitions, or any inquiries about my work.",
+    "email": "Email",
+    "email_desc": "For inquiries about commissions, exhibitions, or collaborations",
+    "instagram": "Instagram",
+    "instagram_desc": "Follow my latest work and behind-the-scenes content",
+    "location": "Location",
+    "location_desc": "Based in Riga, Latvia."
   }
 }

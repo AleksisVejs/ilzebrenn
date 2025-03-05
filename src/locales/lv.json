@@ -35,10 +35,32 @@
   },
   "biography": {
     "title": "Biogrāfija",
-    "intro": "Bāzēta Rīgā, Latvijā, es veidoju tekstilmākslu, kas apvieno tradicionālās amatniecības tehnikas ar laikmetīgo māksliniecisko izteiksmi. Mans darbs pēta robežas starp funkcionāliem objektiem un mākslas instalācijām, bieži iekļaujot inovatīvus materiālus un ilgtspējīgas prakses.",
-    "timeline": "Hronoloģija",
-    "achievements": "Sasniegumi",
-    "contact": "Sazināties",
-    "content": "Ilze Erba-Brenholma ir latviešu tekstilmāksliniece, kas specializējas digitālajā izšūšanā un tekstilmākslā. Viņas darbi pēta feminisma tēmas un dzimuma jautājumus caur gatavo tehniku un tradicionālo tekstilizstrādājumu prizmu, ieskaitot digitālo aušanu un batiku."
+    "intro": "Dzīvoju un strādāju Rīgā, Latvijā. Esmu tekstilmāksliniece, kas pazīstama ar savu darbu tekstila un instalāciju mākslas jomā, pētot tradicionālo tehniku un mūsdienu tēmu krustpunktus.",
+    "timeline": "Laika līnija un sasniegumi",
+    "background": {
+      "title": "Pamatinformācija un karjeras sākums",
+      "content": "Profesionāli pazīstama gan kā Ilze Brenn, gan Ilze Erba-Brenholma, es studēju Latvijas Mākslas akadēmijā, kur attīstīju savu unikālo pieeju tekstilmākslai, apvienojot tradicionālo amatniecību ar mūsdienu mākslas izpausmi."
+    },
+    "exhibitions": {
+      "title": "Nozīmīgā izstāde (2019)",
+      "content": "Būtisks pagrieziena punkts manā karjerā bija izstāde 'Studentu dienasgrāmatas III. Tekstils' no 2019. gada 2. marta līdz 22. aprīlim. Mana instalācija 'Cikliskā diagonāle' pārveidoja apģērbu ar dzimumu lomu stereotipiem abstraktā formā, izmantojot digitālo aušanu, batiku un izšūšanas tehnikas."
+    },
+    "workshops": {
+      "title": "Darbnīcas un sabiedriskā darbība",
+      "content": "Es aktīvi iesaistos mākslas kopienā, vadot atvērtās darbnīcas par digitālo izšūšanu, daloties ar savu pieredzi un tehnikām ar topošajiem māksliniekiem un interesentiem."
+    },
+    "current": {
+      "title": "Pašreizējais fokuss",
+      "content": "Es turpinu aktīvi darboties Latvijas mākslas vidē, pētot robežas starp tradicionālo tekstilu un laikmetīgo mākslu, vienlaikus savos darbos pievēršoties svarīgām sociālajām tēmām."
+    }
+  },
+  "contact": {
+    "intro": "Sazinieties ar mani par sadarbību, izstādēm vai jebkādiem jautājumiem par manu darbu.",
+    "email": "E-pasts",
+    "email_desc": "Saziņai par pasūtījumiem, izstādēm vai sadarbību",
+    "instagram": "Instagram",
+    "instagram_desc": "Sekojiet manam jaunākajam darbam un aizkulisēm",
+    "location": "Atrašanās vieta",
+    "location_desc": "Bāzēta Rīgā, Latvijā."
   }
 }

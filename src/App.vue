@@ -54,6 +54,9 @@ onUnmounted(() => {
         <RouterLink to="/biography" @click="showMobileMenu = false">{{
           t('nav.biography')
         }}</RouterLink>
+        <RouterLink to="/contact" @click="showMobileMenu = false">{{
+          t('nav.contact')
+        }}</RouterLink>
         <button class="language-toggle" @click="toggleLanguage">
           {{ locale === 'en' ? 'LV' : 'EN' }}
         </button>
