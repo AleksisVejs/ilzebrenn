@@ -1,8 +1,16 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 const { t } = useI18n()
+
+// Use absolute paths to avoid any routing issues
+const imagePath = (path) => {
+  // Remove any leading slash to avoid double slashes
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path
+  // Use origin + path for absolute URLs
+  return window.location.origin + '/' + cleanPath
+}
 
 const getWorks = () => [
   {
@@ -14,19 +22,19 @@ const getWorks = () => [
     dimensions: '150x30x30cm',
     images: [
       {
-        url: '/images/funguy-full.jpg',
+        url: imagePath('images/funguy-full.jpg'),
         alt: 'Fun-guy installation full view',
       },
       {
-        url: '/images/funguy1.jpg',
+        url: imagePath('images/funguy1.jpg'),
         alt: 'Fun-guy installation detail 1',
       },
       {
-        url: '/images/hero-bg.jpg',
+        url: imagePath('images/hero-bg.jpg'),
         alt: 'Fun-guy installation detail 3',
       },
       {
-        url: '/images/funguy4.jpg',
+        url: imagePath('images/funguy4.jpg'),
         alt: 'Fun-guy installation detail 2',
       },
     ],
@@ -42,7 +50,7 @@ const getWorks = () => [
     dimensions: '200x150cm',
     images: [
       {
-        url: '/images/rainbow-full.jpg',
+        url: imagePath('images/rainbow-full.jpg'),
         alt: 'Varavīksnene full view',
       },
     ],
@@ -58,31 +66,31 @@ const getWorks = () => [
     dimensions: t('portfolio.works.atgazend.dimensions'),
     images: [
       {
-        url: '/images/atgazene.JPG',
+        url: imagePath('images/atgazene.JPG'),
         alt: 'Atgazend installation main view',
       },
       {
-        url: '/images/atgazene1.jpg',
+        url: imagePath('images/atgazene1.jpg'),
         alt: 'Atgazend installation detail 1',
       },
       {
-        url: '/images/atgazene2.jpg',
+        url: imagePath('images/atgazene2.jpg'),
         alt: 'Atgazend installation detail 2',
       },
       {
-        url: '/images/atgazene3.jpg',
+        url: imagePath('images/atgazene3.jpg'),
         alt: 'Atgazend installation detail 3',
       },
       {
-        url: '/images/atgazene4.jpg',
+        url: imagePath('images/atgazene4.jpg'),
         alt: 'Atgazend installation detail 4',
       },
       {
-        url: '/images/atgazene5.jpg',
+        url: imagePath('images/atgazene5.jpg'),
         alt: 'Atgazend installation detail 5',
       },
       {
-        url: '/images/atgazene6.JPG',
+        url: imagePath('images/atgazene6.JPG'),
         alt: 'Atgazend installation detail 6',
       },
     ],
@@ -92,11 +100,50 @@ const getWorks = () => [
 ]
 
 const works = computed(() => getWorks())
-
 const selectedWork = ref(null)
 const currentImageIndex = ref(0)
+const imagesLoaded = ref({})
+
+// Preload images for better performance
+const preloadImages = () => {
+  works.value.forEach((work) => {
+    work.images.forEach((image) => {
+      const img = new Image()
+      img.src = image.url
+      img.onload = () => {
+        imagesLoaded.value[image.url] = true
+      }
+    })
+  })
+}
+
+onMounted(() => {
+  // Preload images when component mounts
+  preloadImages()
+})
+
+// Preload images when a work is selected
+watch(selectedWork, (newWork) => {
+  if (newWork) {
+    newWork.images.forEach((image) => {
+      if (!imagesLoaded.value[image.url]) {
+        const img = new Image()
+        img.src = image.url
+        img.onload = () => {
+          imagesLoaded.value[image.url] = true
+        }
+      }
+    })
+  }
+})
 
 const openWork = (work) => {
+  // Cleanup URL if needed before opening work
+  if (window.location.pathname.includes('/?') || window.location.search) {
+    const cleanPath = window.location.pathname.split('/?')[0]
+    window.history.replaceState(null, null, cleanPath)
+  }
+
   selectedWork.value = work
   currentImageIndex.value = 0
   document.body.style.overflow = 'hidden'

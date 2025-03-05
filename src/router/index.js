@@ -40,31 +40,4 @@ const router = createRouter({
   },
 })
 
-// Add a global navigation guard to clean up URLs
-router.beforeEach((to, from, next) => {
-  // Check if we're coming from a problematic URL
-  if (from.fullPath.includes('/?') || from.fullPath.includes('~and~')) {
-    // Get the clean path from the destination
-    const cleanPath = to.path
-
-    // Replace the URL with the clean path
-    window.history.replaceState(null, null, cleanPath)
-  }
-
-  next()
-})
-
-// Add a global after-navigation hook to ensure URLs are clean
-router.afterEach((to) => {
-  // Check if the URL has query parameters or hash that needs cleanup
-  if (
-    window.location.search ||
-    window.location.pathname.includes('/?') ||
-    window.location.hash.includes('?')
-  ) {
-    // Replace with clean path
-    window.history.replaceState(null, null, to.path)
-  }
-})
-
 export default router

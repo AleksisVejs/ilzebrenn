@@ -6,46 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Ilze Erba-Brenholma - Textile Artist Portfolio" />
     <title>Ilzebrenn</title>
-    <!-- Start Single Page Apps for GitHub Pages -->
+    <!-- Simple redirect for SPA -->
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages - Modified to prevent URL parameter accumulation
-      // Based on https://github.com/rafgraph/spa-github-pages
       ;(function () {
-        // Get the current URL
-        var location = window.location
+        // If URL has a query string starting with /?
+        if (window.location.search && window.location.search.startsWith('/?')) {
+          // Remove any existing query parameters and use only the clean path
+          var path = window.location.pathname
+          if (path.includes('/?')) {
+            path = path.split('/?')[0]
+          }
 
-        // First, check if we need to redirect
-        if (location.search && location.search[1] === '/') {
-          // Get the path from the query string
-          var path = location.search.substring(1)
+          // Replace entire URL with the clean path
+          window.history.replaceState(null, null, path)
 
-          // Handle the case where we have ~and~ in the URL
-          path = path.replace(/~and~/g, '&')
-
-          // Create clean URL without query strings or hash
-          var cleanUrl = location.origin + '/' + path
-
-          // Redirect to the clean URL
-          window.history.replaceState({}, '', cleanUrl)
-        }
-
-        // Detect URL pollution pattern with multiple /? or ~and~
-        var currentPath = location.pathname + location.search
-        if (
-          currentPath.indexOf('/?') >= 0 &&
-          (currentPath.split('/?').length > 2 ||
-            currentPath.indexOf('~and~') >= 0 ||
-            location.search.indexOf('&/') >= 0)
-        ) {
-          // Get the base path (first segment before /?)
-          var basePath = location.pathname.split('/?')[0]
-
-          // Clean the URL completely
-          window.history.replaceState({}, '', location.origin + basePath)
+          // Force reload if we have persistent issues
+          if (window.location.search || window.location.pathname.includes('/?')) {
+            window.location.href = path
+          }
         }
       })()
     </script>
-    <!-- End Single Page Apps for GitHub Pages -->
   </head>
   <body>
     <div id="app"></div>
