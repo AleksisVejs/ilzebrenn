@@ -12,12 +12,15 @@
       // MIT License
       // https://github.com/rafgraph/spa-github-pages
       ;(function (l) {
-        // Skip processing if we're already on the correct path
-        if (l.pathname.includes('/?')) {
+        // If the URL already contains multiple '?' characters, clean it up
+        if (l.pathname.includes('/?') && l.search.includes('~and~')) {
+          // Clean the URL by keeping only the path
+          window.history.replaceState(null, null, l.pathname.split('/?')[0])
           return
         }
 
-        if (l.search[1] === '/') {
+        // Original GitHub Pages SPA redirect logic
+        if (l.search[1] === '/' && !l.pathname.includes('/?')) {
           var decoded = l.search
             .slice(1)
             .split('&')
@@ -25,7 +28,7 @@
               return s.replace(/~and~/g, '&')
             })
             .join('?')
-          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+          window.history.replaceState(null, null, l.pathname + decoded + l.hash)
         }
       })(window.location)
     </script>

@@ -10,8 +10,11 @@ const isScrolled = ref(false)
 const toggleLanguage = () => {
   locale.value = locale.value === 'en' ? 'lv' : 'en'
   localStorage.setItem('language', locale.value)
-  if (window.location.search) {
-    window.history.replaceState(null, null, window.location.pathname)
+
+  // Clean up URL by removing any query parameters
+  if (window.location.search || window.location.hash.includes('?')) {
+    const cleanPath = window.location.pathname
+    window.history.replaceState(null, null, cleanPath)
   }
 }
 
