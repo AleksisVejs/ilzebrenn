@@ -12,6 +12,11 @@
       // MIT License
       // https://github.com/rafgraph/spa-github-pages
       ;(function (l) {
+        // Skip processing if we're already on the correct path
+        if (l.pathname.includes('/?')) {
+          return
+        }
+
         if (l.search[1] === '/') {
           var decoded = l.search
             .slice(1)
@@ -20,10 +25,7 @@
               return s.replace(/~and~/g, '&')
             })
             .join('?')
-          // Prevent infinite additions of encoded characters
-          if (!decoded.includes('/?/')) {
-            window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
-          }
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
         }
       })(window.location)
     </script>
