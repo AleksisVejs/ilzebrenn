@@ -9,6 +9,7 @@ const isScrolled = ref(false)
 
 const toggleLanguage = () => {
   locale.value = locale.value === 'en' ? 'lv' : 'en'
+  localStorage.setItem('language', locale.value)
 }
 
 const toggleMobileMenu = () => {
@@ -57,8 +58,14 @@ onUnmounted(() => {
         <RouterLink to="/contact" @click="showMobileMenu = false">{{
           t('nav.contact')
         }}</RouterLink>
-        <button class="language-toggle" @click="toggleLanguage">
-          {{ locale === 'en' ? 'LV' : 'EN' }}
+        <button
+          class="language-toggle"
+          @click="toggleLanguage"
+          :class="{ active: locale === 'en' }"
+        >
+          <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
+          <span class="lang-separator">/</span>
+          <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
         </button>
       </nav>
     </header>
@@ -195,10 +202,13 @@ header.scrolled nav a::after {
   border: 1px solid white;
   color: white;
   border-radius: 4px;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 header.scrolled .language-toggle {
@@ -207,13 +217,25 @@ header.scrolled .language-toggle {
 }
 
 .language-toggle:hover {
-  background-color: white;
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 header.scrolled .language-toggle:hover {
-  background-color: #333;
-  color: white;
+  background-color: rgba(51, 51, 51, 0.1);
+}
+
+.lang-option {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.lang-option.selected {
+  opacity: 1;
+  font-weight: 500;
+}
+
+.lang-separator {
+  opacity: 0.4;
 }
 
 .mobile-menu-toggle {
