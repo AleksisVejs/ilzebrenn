@@ -122,7 +122,7 @@ const { t } = useI18n()
 }
 
 .work-preview.rainbow {
-  background-image: url('/images/rainbow-full.jpg');
+  background-image: url(`${import.meta.env.BASE_URL}images/rainbow-full.jpg`);
 }
 
 .work-info {

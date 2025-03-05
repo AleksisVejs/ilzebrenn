@@ -14,7 +14,7 @@ const getWorks = () => [
     dimensions: '150x30x30cm',
     images: [
       {
-        url: '/images/funguy-full.jpg',
+        url: `${import.meta.env.BASE_URL}images/funguy-full.jpg`,
         alt: 'Fun-guy installation full view',
       },
       {
@@ -42,7 +42,7 @@ const getWorks = () => [
     dimensions: '200x150cm',
     images: [
       {
-        url: '/images/rainbow-full.jpg',
+        url: `${import.meta.env.BASE_URL}images/rainbow-full.jpg`,
         alt: 'Varavīksnene full view',
       },
     ],
