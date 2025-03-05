@@ -7,8 +7,21 @@ const getGitHubPagesPath = () => {
   // Check if we have a GitHub Pages-style redirect (/?/path)
   const pathMatch = search.match(/^\?\/(.*?)($|&|~and~)/)
   if (pathMatch && pathMatch[1]) {
-    // Return just the path part
-    return '/' + pathMatch[1].split('&')[0]
+    // Return just the path part and decode URL encoding
+    let cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+
+    // Clean up any percent encoding or unwanted characters
+    try {
+      cleanPath = decodeURIComponent(cleanPath)
+    } catch (e) {
+      // If decoding fails, use the raw path
+      console.error('Failed to decode URL', e)
+    }
+
+    // Remove any remaining % characters
+    cleanPath = cleanPath.replace(/%/g, '')
+
+    return cleanPath
   }
   return null
 }

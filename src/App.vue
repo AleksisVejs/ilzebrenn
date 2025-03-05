@@ -42,9 +42,39 @@ const cleanupUrlAfterNavigation = () => {
     // Extract the path
     const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
     if (pathMatch && pathMatch[1]) {
-      const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+      let cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+
+      // Clean up any percent encoding or unwanted characters
+      try {
+        cleanPath = decodeURIComponent(cleanPath)
+      } catch (e) {
+        // If decoding fails, use the raw path
+        console.error('Failed to decode URL', e)
+      }
+
+      // Remove any remaining % characters
+      cleanPath = cleanPath.replace(/%/g, '')
+
       window.history.replaceState(null, null, cleanPath)
     }
+  }
+
+  // Also handle direct pathname issues with percent characters
+  if (location.pathname.includes('%')) {
+    let cleanPath = location.pathname
+
+    // Clean up any percent encoding or unwanted characters
+    try {
+      cleanPath = decodeURIComponent(cleanPath)
+    } catch (e) {
+      // If decoding fails, use the raw path
+      console.error('Failed to decode URL', e)
+    }
+
+    // Remove any remaining % characters
+    cleanPath = cleanPath.replace(/%/g, '')
+
+    window.history.replaceState(null, null, cleanPath)
   }
 }
 

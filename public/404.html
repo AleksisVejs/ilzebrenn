@@ -6,7 +6,7 @@
     <script>
       // Enhanced Single Page Apps for GitHub Pages
       // Based on https://github.com/rafgraph/spa-github-pages
-      // With improvements to prevent redirect loops
+      // With improvements to prevent redirect loops and handle URL encoding
 
       // If you're creating a Project Pages site and NOT using a custom domain,
       // then set pathSegmentsToKeep to 1 (enterprise users may need to set it to > 1).
@@ -20,7 +20,21 @@
         // Emergency escape from redirect loop - go to root
         l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/')
       } else {
-        // Normal GitHub Pages SPA redirect
+        // Clean pathname of any percent characters or encoding issues
+        var cleanPathname = l.pathname
+
+        // Try to decode any percent encoding
+        try {
+          cleanPathname = decodeURIComponent(cleanPathname)
+        } catch (e) {
+          // If decoding fails, just use the raw path
+          console.error('Failed to decode path', e)
+        }
+
+        // Remove any remaining percent characters that couldn't be decoded
+        cleanPathname = cleanPathname.replace(/%/g, '')
+
+        // Normal GitHub Pages SPA redirect with cleaned pathname
         l.replace(
           l.protocol +
             '//' +
@@ -31,7 +45,7 @@
               .slice(0, 1 + pathSegmentsToKeep)
               .join('/') +
             '/?/' +
-            l.pathname
+            cleanPathname
               .slice(1)
               .split('/')
               .slice(pathSegmentsToKeep)
