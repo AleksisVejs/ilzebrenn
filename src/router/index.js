@@ -3,6 +3,11 @@ import HomeView from '../views/HomeView.vue'
 
 // We need a function to parse GitHub Pages redirect URLs
 const getGitHubPagesPath = () => {
+  // If not on GitHub Pages (has custom domain), skip this logic
+  if (window.location.hostname !== 'ilzebrenn.github.io') {
+    return null
+  }
+
   const search = window.location.search
   // Check if we have a GitHub Pages-style redirect (/?/path)
   const pathMatch = search.match(/^\?\/(.*?)($|&|~and~)/)
@@ -71,7 +76,8 @@ const router = createRouter({
 // Add navigation guard to handle GitHub Pages redirects
 router.beforeEach((to, from, next) => {
   // Only run on initial page load (from is empty)
-  if (from.name === undefined) {
+  // And only on GitHub Pages (not on custom domain)
+  if (from.name === undefined && window.location.hostname === 'ilzebrenn.github.io') {
     const githubPagesPath = getGitHubPagesPath()
     if (githubPagesPath) {
       // If we detected a GitHub Pages redirect path, redirect to the real path

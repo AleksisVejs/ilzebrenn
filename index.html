@@ -9,6 +9,11 @@
     <!-- Minimal redirect handling for SPA on GitHub Pages -->
     <script type="text/javascript">
       ;(function () {
+        // Skip all this logic if we're on a custom domain
+        if (window.location.hostname !== 'ilzebrenn.github.io') {
+          return
+        }
+
         const location = window.location
 
         // Only clean up infinite redirect loops, not normal GitHub Pages redirects
