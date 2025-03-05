@@ -24,7 +24,20 @@ const router = createRouter({
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
     },
+    // Add a catch-all route for GitHub Pages
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
+  // Add scroll behavior for better UX
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
 export default router

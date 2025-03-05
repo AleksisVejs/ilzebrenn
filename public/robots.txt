@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aleksisvejs.github.io/ilzebrenn/sitemap.xml 
