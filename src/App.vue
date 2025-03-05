@@ -7,15 +7,31 @@ const { t, locale } = useI18n()
 const showMobileMenu = ref(false)
 const isScrolled = ref(false)
 
+// Function to clean up URL parameters
+const cleanupUrl = () => {
+  const location = window.location
+
+  // If there's any sign of URL pollution, clean it completely
+  if (location.search || location.pathname.includes('/?') || location.hash.includes('?')) {
+    // Get the base path without any parameters
+    let basePath = location.pathname
+
+    // Remove any potential /? segments from the pathname
+    if (basePath.includes('/?')) {
+      basePath = basePath.split('/?')[0]
+    }
+
+    // Replace the URL with just the clean path
+    window.history.replaceState(null, null, basePath)
+  }
+}
+
 const toggleLanguage = () => {
   locale.value = locale.value === 'en' ? 'lv' : 'en'
   localStorage.setItem('language', locale.value)
 
-  // Clean up URL by removing any query parameters
-  if (window.location.search || window.location.hash.includes('?')) {
-    const cleanPath = window.location.pathname
-    window.history.replaceState(null, null, cleanPath)
-  }
+  // Clean up the URL when toggling language
+  cleanupUrl()
 }
 
 const toggleMobileMenu = () => {
@@ -27,6 +43,9 @@ const handleScroll = () => {
 }
 
 onMounted(() => {
+  // Clean up URL parameters on initial load
+  cleanupUrl()
+
   window.addEventListener('scroll', handleScroll)
   handleScroll()
 })

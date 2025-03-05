@@ -8,29 +8,42 @@
     <title>Ilzebrenn</title>
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // MIT License
-      // https://github.com/rafgraph/spa-github-pages
-      ;(function (l) {
-        // If the URL already contains multiple '?' characters, clean it up
-        if (l.pathname.includes('/?') && l.search.includes('~and~')) {
-          // Clean the URL by keeping only the path
-          window.history.replaceState(null, null, l.pathname.split('/?')[0])
-          return
+      // Single Page Apps for GitHub Pages - Modified to prevent URL parameter accumulation
+      // Based on https://github.com/rafgraph/spa-github-pages
+      ;(function () {
+        // Get the current URL
+        var location = window.location
+
+        // First, check if we need to redirect
+        if (location.search && location.search[1] === '/') {
+          // Get the path from the query string
+          var path = location.search.substring(1)
+
+          // Handle the case where we have ~and~ in the URL
+          path = path.replace(/~and~/g, '&')
+
+          // Create clean URL without query strings or hash
+          var cleanUrl = location.origin + '/' + path
+
+          // Redirect to the clean URL
+          window.history.replaceState({}, '', cleanUrl)
         }
 
-        // Original GitHub Pages SPA redirect logic
-        if (l.search[1] === '/' && !l.pathname.includes('/?')) {
-          var decoded = l.search
-            .slice(1)
-            .split('&')
-            .map(function (s) {
-              return s.replace(/~and~/g, '&')
-            })
-            .join('?')
-          window.history.replaceState(null, null, l.pathname + decoded + l.hash)
+        // Detect URL pollution pattern with multiple /? or ~and~
+        var currentPath = location.pathname + location.search
+        if (
+          currentPath.indexOf('/?') >= 0 &&
+          (currentPath.split('/?').length > 2 ||
+            currentPath.indexOf('~and~') >= 0 ||
+            location.search.indexOf('&/') >= 0)
+        ) {
+          // Get the base path (first segment before /?)
+          var basePath = location.pathname.split('/?')[0]
+
+          // Clean the URL completely
+          window.history.replaceState({}, '', location.origin + basePath)
         }
-      })(window.location)
+      })()
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
   </head>
