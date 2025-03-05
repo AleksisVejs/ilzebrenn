@@ -1,6 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+// We need a function to parse GitHub Pages redirect URLs
+const getGitHubPagesPath = () => {
+  const search = window.location.search
+  // Check if we have a GitHub Pages-style redirect (/?/path)
+  const pathMatch = search.match(/^\?\/(.*?)($|&|~and~)/)
+  if (pathMatch && pathMatch[1]) {
+    // Return just the path part
+    return '/' + pathMatch[1].split('&')[0]
+  }
+  return null
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -43,15 +55,29 @@ const router = createRouter({
   },
 })
 
-// Add navigation guard to clean up URLs if needed
+// Add navigation guard to handle GitHub Pages redirects
 router.beforeEach((to, from, next) => {
-  // If we still have any problematic URL patterns in the current URL, clean them
-  const location = window.location
-  if (location.search && (location.search.includes('~and~') || location.search.includes('?/'))) {
-    // Let the cleanup scripts in App.vue and index.html handle it
-    next()
-    return
+  // Only run on initial page load (from is empty)
+  if (from.name === undefined) {
+    const githubPagesPath = getGitHubPagesPath()
+    if (githubPagesPath) {
+      // If we detected a GitHub Pages redirect path, redirect to the real path
+      return next(githubPagesPath)
+    }
   }
+
+  // Detect redirect loops with ~and~ parameters
+  const location = window.location
+  if (
+    location.search &&
+    location.search.includes('~and~') &&
+    location.search.split('~and~').length > 3
+  ) {
+    // Just go to home if we detect a redirect loop
+    return next('/')
+  }
+
+  // Continue with normal navigation
   next()
 })
 

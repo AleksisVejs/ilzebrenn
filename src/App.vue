@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import router from './router'
 
 const { t, locale } = useI18n()
 const showMobileMenu = ref(false)
@@ -11,7 +12,7 @@ const isScrolled = ref(false)
 const cleanupUrl = () => {
   const location = window.location
 
-  // Check if we're in a redirect loop with endless ~and~ parameters
+  // Only clean up infinite redirect loops with many ~and~ parameters
   if (
     location.search &&
     location.search.includes('~and~') &&
@@ -28,14 +29,22 @@ const cleanupUrl = () => {
     }
   }
 
-  // Handle normal cases
-  if (
-    location.pathname.includes('/?') ||
-    (location.search && (location.search.includes('/?') || location.search.includes('~and~')))
-  ) {
-    // Get the clean path
-    const path = location.pathname.split('/?')[0]
-    window.history.replaceState(null, null, path)
+  // DO NOT clean up /?/ pattern on initial load - let the router handle it
+  // Only clean up once navigation has completed
+}
+
+// This function should be called after navigation is complete
+const cleanupUrlAfterNavigation = () => {
+  const location = window.location
+
+  // Now it's safe to clean up the URL if it still has the /?/ format
+  if (location.search && location.search.includes('/?/')) {
+    // Extract the path
+    const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
+    if (pathMatch && pathMatch[1]) {
+      const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
+      window.history.replaceState(null, null, cleanPath)
+    }
   }
 }
 
@@ -55,8 +64,14 @@ const handleScroll = () => {
 }
 
 onMounted(() => {
-  // Clean up URL parameters on initial load with simplified approach
+  // Clean up only redirect loops on initial load
   cleanupUrl()
+
+  // Listen for router changes to clean up URL after navigation
+  router.afterEach(() => {
+    // Now it's safe to clean up the URL
+    cleanupUrlAfterNavigation()
+  })
 
   window.addEventListener('scroll', handleScroll)
   handleScroll()

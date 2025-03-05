@@ -6,40 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Ilze Erba-Brenholma - Textile Artist Portfolio" />
     <title>Ilzebrenn</title>
-    <!-- Advanced redirect handling for SPA on GitHub Pages -->
+    <!-- Minimal redirect handling for SPA on GitHub Pages -->
     <script type="text/javascript">
       ;(function () {
         const location = window.location
 
-        // Check if we need to process a GitHub Pages SPA redirect
+        // Only clean up infinite redirect loops, not normal GitHub Pages redirects
         if (
           location.search &&
-          (location.search.startsWith('/?/') || location.search.includes('~and~'))
+          location.search.includes('~and~') &&
+          location.search.split('~and~').length > 3
         ) {
-          // Extract the path from the query parameter (GitHub Pages SPA pattern)
+          // Extract the path if possible
           const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
-
           if (pathMatch && pathMatch[1]) {
-            // Get just the clean path without parameters
             const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
-
-            // Replace URL with the clean path and stop any potential redirect loops
             window.history.replaceState(null, null, cleanPath)
-
-            // If we still have problematic URL patterns, do a hard redirect as last resort
-            if (
-              window.location.search.includes('~and~') &&
-              window.location.search.split('~and~').length > 3
-            ) {
-              window.location.href = cleanPath
-            }
+          } else {
+            // Last resort - go to home
+            window.history.replaceState(null, null, '/')
           }
         }
-        // Handle simpler case with pathname containing /?
-        else if (location.pathname.includes('/?')) {
-          const path = location.pathname.split('/?')[0]
-          window.history.replaceState(null, null, path)
-        }
+        // DO NOT clean up normal /?/ redirects here - let the Vue router handle them
       })()
     </script>
   </head>
