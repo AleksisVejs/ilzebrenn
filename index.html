@@ -6,24 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Ilze Erba-Brenholma - Textile Artist Portfolio" />
     <title>Ilzebrenn</title>
-    <!-- Minimal redirect handling for SPA on GitHub Pages -->
+    <!-- Improved redirect handling for SPA on GitHub Pages -->
     <script type="text/javascript">
       ;(function () {
-        // Skip all this logic if we're on a custom domain
-        if (window.location.hostname !== 'ilzebrenn.github.io') {
+        // Check if we have a redirect from the 404 page
+        if (window.location.search && window.location.search.includes('redirect=true')) {
+          // Get the stored path from sessionStorage
+          const redirectPath = sessionStorage.getItem('redirectPath') || '/'
+
+          // Remove the redirect flag from sessionStorage to prevent loops
+          sessionStorage.removeItem('redirectPath')
+
+          // Replace current URL with the clean path
+          window.history.replaceState(null, null, redirectPath)
           return
         }
 
-        const location = window.location
-
-        // Only clean up infinite redirect loops, not normal GitHub Pages redirects
-        if (
-          location.search &&
-          location.search.includes('~and~') &&
-          location.search.split('~and~').length > 3
-        ) {
+        // Handle legacy GitHub Pages redirects (for backwards compatibility)
+        if (window.location.search && window.location.search.startsWith('?/')) {
           // Extract the path if possible
-          const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
+          const pathMatch = window.location.search.match(/\?\/(.*?)($|&|~and~)/)
           if (pathMatch && pathMatch[1]) {
             let cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
 
@@ -39,15 +41,12 @@
             cleanPath = cleanPath.replace(/%/g, '')
 
             window.history.replaceState(null, null, cleanPath)
-          } else {
-            // Last resort - go to home
-            window.history.replaceState(null, null, '/')
           }
         }
 
-        // Handle direct % characters in the pathname - a common GitHub Pages issue
-        if (location.pathname.includes('%')) {
-          let cleanPath = location.pathname
+        // Handle direct % characters in the pathname
+        if (window.location.pathname.includes('%')) {
+          let cleanPath = window.location.pathname
 
           // Clean up any percent encoding or unwanted characters
           try {
@@ -62,8 +61,6 @@
 
           window.history.replaceState(null, null, cleanPath)
         }
-
-        // DO NOT clean up normal /?/ redirects here - let the Vue router handle them
       })()
     </script>
   </head>

@@ -5,18 +5,17 @@
     <title>Ilzebrenn</title>
     <script>
       // Enhanced Single Page Apps for GitHub Pages
-      // Based on https://github.com/rafgraph/spa-github-pages
-      // With improvements to prevent redirect loops and handle URL encoding
+      // Modified version of https://github.com/rafgraph/spa-github-pages
 
       // If you're creating a Project Pages site and NOT using a custom domain,
       // then set pathSegmentsToKeep to 1 (enterprise users may need to set it to > 1).
-      // Otherwise, leave pathSegmentsToKeep as 0.
+      // Otherwise, with a custom domain, leave pathSegmentsToKeep as 0.
       var pathSegmentsToKeep = 0
 
       var l = window.location
 
       // Check if we're already in a redirect loop
-      if (l.search && l.search.split('~and~').length > 3) {
+      if (l.search && l.search.includes('redirect=true')) {
         // Emergency escape from redirect loop - go to root
         l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/')
       } else {
@@ -34,25 +33,17 @@
         // Remove any remaining percent characters that couldn't be decoded
         cleanPathname = cleanPathname.replace(/%/g, '')
 
-        // Normal GitHub Pages SPA redirect with cleaned pathname
+        // Store the current path in sessionStorage for the main page to read
+        sessionStorage.setItem('redirectPath', cleanPathname)
+
+        // Redirect to the index page with a special parameter that indicates we want to restore the path
         l.replace(
           l.protocol +
             '//' +
             l.hostname +
             (l.port ? ':' + l.port : '') +
-            l.pathname
-              .split('/')
-              .slice(0, 1 + pathSegmentsToKeep)
-              .join('/') +
-            '/?/' +
-            cleanPathname
-              .slice(1)
-              .split('/')
-              .slice(pathSegmentsToKeep)
-              .join('/')
-              .replace(/&/g, '~and~') +
-            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash,
+            '/' +
+            (l.search ? l.search + '&redirect=true' : '?redirect=true'),
         )
       }
     </script>
