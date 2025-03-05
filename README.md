@@ -1,6 +1,6 @@
 # ilzebrenn
 
-This is a portfolio website for Ilze Erba-Brenholma, a textile artist. The site is built with Vue 3 and Vite.
+This is a portfolio website for Ilze Brenn, a textile artist. The site is built with Vue 3 and Vite.
 
 ## GitHub Pages Deployment
 
