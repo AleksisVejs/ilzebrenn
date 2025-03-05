@@ -2,37 +2,6 @@
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
-const timeline = [
-  {
-    year: '2023',
-    title: 'Solo Exhibition "Nature\'s Whispers"',
-    location: 'Contemporary Art Museum, Riga',
-  },
-  {
-    year: '2022',
-    title: 'Artist Residency',
-    location: "Nordic Artists' Centre, Dale, Norway",
-  },
-  {
-    year: '2021',
-    title: 'Group Exhibition "Textile Innovations"',
-    location: 'Design Museum, Copenhagen',
-  },
-]
-
-const achievements = [
-  {
-    title: 'Young Artist Award',
-    year: '2023',
-    organization: 'Latvia Arts Foundation',
-  },
-  {
-    title: 'Environmental Art Grant',
-    year: '2022',
-    organization: 'Nordic Culture Fund',
-  },
-]
 </script>
 
 <template>
