@@ -10,6 +10,9 @@ const isScrolled = ref(false)
 const toggleLanguage = () => {
   locale.value = locale.value === 'en' ? 'lv' : 'en'
   localStorage.setItem('language', locale.value)
+  if (window.location.search) {
+    window.history.replaceState(null, null, window.location.pathname)
+  }
 }
 
 const toggleMobileMenu = () => {
