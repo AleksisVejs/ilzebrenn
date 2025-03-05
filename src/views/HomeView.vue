@@ -47,7 +47,7 @@ const { t } = useI18n()
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: url('/images/hero-bg.jpg');
+  background-image: url(`${import.meta.env.BASE_URL}images/hero-bg.jpg`);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -118,7 +118,7 @@ const { t } = useI18n()
 }
 
 .work-preview.funguy {
-  background-image: url('/images/funguy1.jpg');
+  background-image: url(`${import.meta.env.BASE_URL}images/funguy1.jpg`);
 }
 
 .work-preview.rainbow {

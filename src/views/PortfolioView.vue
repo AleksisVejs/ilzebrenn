@@ -18,15 +18,15 @@ const getWorks = () => [
         alt: 'Fun-guy installation full view',
       },
       {
-        url: '/images/funguy1.jpg',
+        url: `${import.meta.env.BASE_URL}images/funguy1.jpg`,
         alt: 'Fun-guy installation detail 1',
       },
       {
-        url: '/images/hero-bg.jpg',
+        url: `${import.meta.env.BASE_URL}images/hero-bg.jpg`,
         alt: 'Fun-guy installation detail 3',
       },
       {
-        url: '/images/funguy4.jpg',
+        url: `${import.meta.env.BASE_URL}images/funguy4.jpg`,
         alt: 'Fun-guy installation detail 2',
       },
     ],
