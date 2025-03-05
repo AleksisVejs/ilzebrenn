@@ -7,6 +7,7 @@ This is a portfolio website for Ilze Erba-Brenholma, a textile artist. The site 
 This project is configured for automatic deployment to GitHub Pages. When you push changes to the `main` branch, the site will be automatically built and deployed to GitHub Pages.
 
 You can access the live site at: https://aleksisvejs.github.io/ilzebrenn/
+Custom domain: https://ilzebrenn.com/
 
 ## Recommended IDE Setup
 
