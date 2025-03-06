@@ -113,11 +113,12 @@ const educationItems = computed(() => {
 <style scoped>
 .biography {
   min-height: 100vh;
-  background-color: #f8f8f8;
+  background-color: #1a1714;
+  color: white;
 }
 
 .bio-header {
-  background-color: #000;
+  background-color: #1a1714;
   color: white;
   padding: 120px 2rem 4rem;
 }
@@ -129,9 +130,22 @@ const educationItems = computed(() => {
 }
 
 .bio-header h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 300;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  position: relative;
+  display: inline-block;
+}
+
+.bio-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--accent-clay, #c78c60);
 }
 
 .artist-image {
@@ -142,6 +156,7 @@ const educationItems = computed(() => {
   background-image: url('/images/artist-portrait.jpg');
   background-size: cover;
   background-position: center;
+  border: 3px solid rgba(255, 255, 255, 0.1);
 }
 
 .bio-intro {
@@ -149,7 +164,9 @@ const educationItems = computed(() => {
   margin: 0 auto;
   font-size: 1.2rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
 }
 
 .bio-content {
@@ -160,25 +177,29 @@ const educationItems = computed(() => {
 
 section {
   margin-bottom: 2rem;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.05);
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 section h2 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 300;
-  margin-bottom: 1rem;
-  color: #333;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.8rem;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 section p {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #444;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
 }
 
 .formatted-content {
@@ -186,7 +207,7 @@ section p {
 }
 
 .exhibition-content {
-  border-left: 4px solid #000;
+  border-left: 3px solid var(--accent-clay, #c78c60);
   padding-left: 1.5rem;
   margin-top: 1rem;
 }
@@ -199,72 +220,80 @@ section p {
 .timeline::before {
   content: '';
   position: absolute;
-  left: 0;
   top: 0;
-  height: 100%;
+  bottom: 0;
+  left: 0;
   width: 2px;
-  background-color: #000;
+  background-color: var(--accent-clay, #c78c60);
+  opacity: 0.6;
 }
 
 .timeline-item {
   position: relative;
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
 }
 
 .timeline-dot {
   position: absolute;
   left: -4px;
-  top: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #000;
-}
-
-.timeline-content {
-  background-color: #f8f8f8;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-clay, #c78c60);
+  border-radius: 0;
+  transform: rotate(45deg);
 }
 
 .timeline-year {
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
-  color: #000;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: var(--accent-clay, #c78c60);
+  font-family: 'Raleway', sans-serif;
 }
 
 .timeline-details {
-  color: #444;
-  line-height: 1.4;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Raleway', sans-serif;
 }
 
 @media (max-width: 768px) {
   .bio-header h1 {
-    font-size: 2rem;
+    font-size: 2.8rem;
   }
 
   .bio-intro {
     font-size: 1.1rem;
   }
 
+  .bio-content {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bio-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .artist-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .bio-intro {
+    font-size: 1rem;
+  }
+
   section h2 {
     font-size: 1.5rem;
   }
 
-  .timeline::before {
-    left: 12px;
-  }
-
-  .timeline-item {
-    padding-left: 2rem;
-  }
-
-  .timeline-dot {
-    left: 8px;
+  section p {
+    font-size: 1rem;
   }
 }
 </style>

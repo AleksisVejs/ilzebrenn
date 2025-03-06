@@ -179,6 +179,11 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: #000;
+  /* Add subtle texture */
+  background-image:
+    url('/images/subtle-texture.png'),
+    linear-gradient(to bottom, rgba(26, 23, 20, 0.97), rgba(26, 23, 20, 0.95));
+  background-blend-mode: overlay;
 }
 
 #app {
@@ -221,12 +226,16 @@ header {
   right: 0;
   width: 100%;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  transition: all 0.4s ease;
+  /* Add artistic border bottom */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 header.scrolled {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: rgba(26, 23, 20, 0.92);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .logo a {
@@ -236,10 +245,11 @@ header.scrolled {
   text-decoration: none;
   letter-spacing: 2px;
   transition: color 0.3s ease;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 header.scrolled .logo a {
-  color: #333;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 nav {
@@ -256,10 +266,11 @@ nav a {
   position: relative;
   padding: 0.5rem 0;
   transition: all 0.3s ease;
+  font-family: 'Raleway', sans-serif;
 }
 
 header.scrolled nav a {
-  color: #333;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 nav a::after {
@@ -268,21 +279,22 @@ nav a::after {
   bottom: 0;
   left: 0;
   width: 0;
-  height: 2px;
-  background-color: currentColor;
-  transition: width 0.3s ease;
-  opacity: 0.7;
+  height: 1px;
+  background-color: var(--accent-clay, #c78c60);
+  transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 0.9;
 }
 
-header.scrolled nav a::after {
-  background-color: currentColor;
+nav a:hover::after,
+nav a.router-link-active::after {
+  width: 100%;
 }
 
 .language-toggle {
   background: none;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  border-radius: 4px;
+  border-radius: 0;
   padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
   cursor: pointer;
@@ -290,19 +302,21 @@ header.scrolled nav a::after {
   display: flex;
   align-items: center;
   gap: 0.3rem;
+  font-family: 'Raleway', sans-serif;
 }
 
 header.scrolled .language-toggle {
-  border-color: #333;
-  color: #333;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .language-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(199, 140, 96, 0.1);
+  border-color: var(--accent-clay, #c78c60);
 }
 
 header.scrolled .language-toggle:hover {
-  background-color: rgba(51, 51, 51, 0.1);
+  background-color: rgba(199, 140, 96, 0.1);
 }
 
 .lang-option {
@@ -313,6 +327,7 @@ header.scrolled .language-toggle:hover {
 .lang-option.selected {
   opacity: 1;
   font-weight: 500;
+  color: var(--accent-clay, #c78c60);
 }
 
 .lang-separator {
@@ -341,10 +356,6 @@ header.scrolled .language-toggle:hover {
   transition: all 0.3s ease;
 }
 
-header.scrolled .mobile-menu-toggle span {
-  background-color: #333;
-}
-
 .mobile-menu-toggle.active span:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
@@ -370,14 +381,42 @@ header.scrolled .mobile-menu-toggle span {
 }
 
 footer {
+  background-color: rgba(26, 23, 20, 0.98);
+  color: rgba(255, 255, 255, 0.7);
   text-align: center;
   padding: 2rem;
-  background-color: white;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   font-size: 0.9rem;
-  color: #666;
+  position: relative;
+  font-family: 'Raleway', sans-serif;
+  /* Add artistic top border */
+  border-top: 1px solid rgba(199, 140, 96, 0.2);
+}
+
+/* Add textile-inspired decorative element to footer */
+footer::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  background: linear-gradient(to right, transparent, var(--accent-clay, #c78c60), transparent);
+}
+
+/* Subtle art-inspired grain texture overlay for the entire page */
+.app-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin: 0;
+  height: 100%;
+  pointer-events: none;
+  background-image: url('/images/noise-texture.png');
+  background-repeat: repeat;
+  opacity: 0.03;
+  z-index: 9999;
 }
 
 @media (max-width: 768px) {
@@ -391,37 +430,64 @@ footer {
     left: 0;
     right: 0;
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(26, 23, 20, 0.98);
     flex-direction: column;
     justify-content: center;
     padding: 2rem;
     transform: translateX(100%);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 1000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
   }
 
   nav.mobile-open {
-    background-color: #000;
-    color: white;
-    border-color: white;
     transform: translateX(0);
     opacity: 1;
     pointer-events: all;
   }
 
-  nav a,
-  header.scrolled nav a {
+  nav a {
     color: white;
-    font-size: 1.5rem;
-    margin: 1rem 0;
+    font-size: 2rem;
+    margin: 0.8rem 0;
+    padding: 0.5rem 0;
+    opacity: 0.8;
+    font-family: 'Cormorant Garamond', serif;
+    text-align: center;
+  }
+
+  nav a:hover,
+  nav a.router-link-active {
+    opacity: 1;
+    color: var(--accent-clay, #c78c60);
+  }
+
+  nav a::after {
+    height: 1px;
+    bottom: -2px;
   }
 
   .language-toggle {
-    margin-top: 1rem;
-    border-color: white;
+    margin: 2rem auto 0;
+    border-color: rgba(255, 255, 255, 0.2);
     color: white;
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  .mobile-menu-toggle span {
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-toggle.active span {
+    background-color: white;
   }
 }
 
