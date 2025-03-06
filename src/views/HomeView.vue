@@ -86,23 +86,6 @@ const navigateToPortfolio = () => {
   width: 100%;
 }
 
-/* Add textile-inspired overlay pattern */
-.hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/images/textile-pattern.png');
-  background-repeat: repeat;
-  opacity: 0.1;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  mix-blend-mode: overlay;
-}
-
 .artist-name {
   font-size: 4.5rem;
   font-weight: 300;

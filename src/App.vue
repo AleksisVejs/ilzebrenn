@@ -178,11 +178,8 @@ body {
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: #000;
-  /* Add subtle texture */
-  background-image:
-    url('/images/subtle-texture.png'),
-    linear-gradient(to bottom, rgba(26, 23, 20, 0.97), rgba(26, 23, 20, 0.95));
+  background-color: #1a1714;
+  background-image: linear-gradient(to bottom, rgba(26, 23, 20, 0.97), rgba(26, 23, 20, 0.95));
   background-blend-mode: overlay;
 }
 
@@ -227,7 +224,6 @@ header {
   width: 100%;
   z-index: 1000;
   transition: all 0.4s ease;
-  /* Add artistic border bottom */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -388,11 +384,9 @@ footer {
   font-size: 0.9rem;
   position: relative;
   font-family: 'Raleway', sans-serif;
-  /* Add artistic top border */
   border-top: 1px solid rgba(199, 140, 96, 0.2);
 }
 
-/* Add textile-inspired decorative element to footer */
 footer::before {
   content: '';
   position: absolute;
@@ -402,21 +396,6 @@ footer::before {
   width: 120px;
   height: 5px;
   background: linear-gradient(to right, transparent, var(--accent-clay, #c78c60), transparent);
-}
-
-/* Subtle art-inspired grain texture overlay for the entire page */
-.app-container::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background-image: url('/images/noise-texture.png');
-  background-repeat: repeat;
-  opacity: 0.03;
-  z-index: 9999;
 }
 
 @media (max-width: 768px) {
