@@ -130,6 +130,15 @@ onUnmounted(() => {
       </button>
 
       <nav :class="{ 'mobile-open': showMobileMenu }">
+        <button
+          class="language-toggle"
+          @click="toggleLanguage"
+          :class="{ active: locale === 'en' }"
+        >
+          <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
+          <span class="lang-separator">/</span>
+          <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
+        </button>
         <RouterLink to="/" @click="showMobileMenu = false">{{ t('nav.home') }}</RouterLink>
         <RouterLink to="/portfolio" @click="showMobileMenu = false">{{
           t('nav.portfolio')
@@ -140,15 +149,6 @@ onUnmounted(() => {
         <RouterLink to="/contact" @click="showMobileMenu = false">{{
           t('nav.contact')
         }}</RouterLink>
-        <button
-          class="language-toggle"
-          @click="toggleLanguage"
-          :class="{ active: locale === 'en' }"
-        >
-          <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
-          <span class="lang-separator">/</span>
-          <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
-        </button>
       </nav>
     </header>
 
