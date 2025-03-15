@@ -185,7 +185,7 @@ const navigateToPortfolio = () => {
 }
 
 .rainbow::before {
-  background-image: url('/images/rainbow-full.jpg');
+  background-image: url('/images/varaviksnene1.jpg');
 }
 
 .atgazend::before {

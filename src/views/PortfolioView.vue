@@ -45,13 +45,41 @@ const getWorks = () => [
     id: 'rainbow',
     title: t('portfolio.works.rainbow.title'),
     description: t('portfolio.works.rainbow.description'),
-    year: '2023',
+    year: t('portfolio.works.rainbow.year'),
     material: t('portfolio.works.rainbow.material'),
     dimensions: '200x150cm',
     images: [
       {
-        url: imagePath('images/rainbow-full.jpg'),
-        alt: 'Varavīksnene full view',
+        url: imagePath('images/varaviksnene1.jpg'),
+        alt: 'Varavīksnene view 1',
+      },
+      {
+        url: imagePath('images/varaviksnene2.jpg'),
+        alt: 'Varavīksnene view 2',
+      },
+      {
+        url: imagePath('images/varaviksnene3.jpg'),
+        alt: 'Varavīksnene view 3',
+      },
+      {
+        url: imagePath('images/varaviksnene4.jpg'),
+        alt: 'Varavīksnene view 4',
+      },
+      {
+        url: imagePath('images/varaviksnene5.jpg'),
+        alt: 'Varavīksnene view 5',
+      },
+      {
+        url: imagePath('images/varaviksnene6.jpg'),
+        alt: 'Varavīksnene view 6',
+      },
+      {
+        url: imagePath('images/varaviksnene7.jpg'),
+        alt: 'Varavīksnene view 7',
+      },
+      {
+        url: imagePath('images/varaviksnene8.jpg'),
+        alt: 'Varavīksnene view 8',
       },
     ],
     thumbnailIndex: 0,
@@ -103,6 +131,8 @@ const works = computed(() => getWorks())
 const selectedWork = ref(null)
 const currentImageIndex = ref(0)
 const imagesLoaded = ref({})
+const touchStartX = ref(0)
+const touchEndX = ref(0)
 
 // Preload images for better performance
 const preloadImages = () => {
@@ -115,6 +145,31 @@ const preloadImages = () => {
       }
     })
   })
+}
+
+// Handle touch events for swiping
+const handleTouchStart = (e) => {
+  touchStartX.value = e.touches[0].clientX
+}
+
+const handleTouchEnd = (e) => {
+  touchEndX.value = e.changedTouches[0].clientX
+  handleSwipe()
+}
+
+const handleSwipe = () => {
+  const minSwipeDistance = 50 // Minimum distance required for a swipe
+  const swipeDistance = touchEndX.value - touchStartX.value
+
+  if (Math.abs(swipeDistance) >= minSwipeDistance && selectedWork.value) {
+    if (swipeDistance > 0) {
+      // Swipe right - go to previous image
+      prevImage()
+    } else {
+      // Swipe left - go to next image
+      nextImage()
+    }
+  }
 }
 
 onMounted(() => {
@@ -217,7 +272,11 @@ const goToImage = (index) => {
       </button>
 
       <div class="modal-content">
-        <div class="modal-image-container">
+        <div
+          class="modal-image-container"
+          @touchstart="handleTouchStart"
+          @touchend="handleTouchEnd"
+        >
           <div
             class="modal-image"
             :style="{ backgroundImage: 'url(' + selectedWork.images[currentImageIndex].url + ')' }"
