@@ -75,7 +75,7 @@ const touchEndX = ref(0)
 const savedScrollY = ref(0)
 
 const preloadWorkImages = (work) => {
-  work.images.forEach((image) => {
+  work.images.slice(0, 2).forEach((image) => {
     if (!imagesLoaded.value[image.url]) {
       const img = new Image()
       img.src = image.url

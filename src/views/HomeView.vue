@@ -1,4 +1,5 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -6,14 +7,66 @@ const { t } = useI18n()
 const router = useRouter()
 
 const works = [
-  { id: 'funguy', titleKey: 'portfolio.works.funguy.title', imageClass: 'funguy' },
-  { id: 'rainbow', titleKey: 'portfolio.works.rainbow.title', imageClass: 'rainbow' },
-  { id: 'atgazend', titleKey: 'portfolio.works.atgazend.title', imageClass: 'atgazend' },
+  {
+    id: 'funguy',
+    titleKey: 'portfolio.works.funguy.title',
+    imageClass: 'funguy',
+    imageUrl: '/images/funguy-full.jpg',
+  },
+  {
+    id: 'rainbow',
+    titleKey: 'portfolio.works.rainbow.title',
+    imageClass: 'rainbow',
+    imageUrl: '/images/varaviksnene1.jpg',
+  },
+  {
+    id: 'atgazend',
+    titleKey: 'portfolio.works.atgazend.title',
+    imageClass: 'atgazend',
+    imageUrl: '/images/atgazene.JPG',
+  },
 ]
+
+const workRefs = ref({})
+const visibleWorks = ref({})
+let previewObserver = null
 
 const navigateToPortfolio = () => {
   router.push('/portfolio')
 }
+
+const setWorkRef = (element, id) => {
+  if (!element) {
+    delete workRefs.value[id]
+    return
+  }
+  workRefs.value[id] = element
+}
+
+onMounted(() => {
+  previewObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        const { id } = entry.target.dataset
+        if (id) {
+          visibleWorks.value[id] = true
+        }
+        previewObserver.unobserve(entry.target)
+      })
+    },
+    { rootMargin: '200px 0px' },
+  )
+
+  Object.values(workRefs.value).forEach((element) => previewObserver.observe(element))
+})
+
+onUnmounted(() => {
+  if (previewObserver) {
+    previewObserver.disconnect()
+  }
+  workRefs.value = {}
+})
 </script>
 
 <template>
@@ -29,6 +82,8 @@ const navigateToPortfolio = () => {
         :key="work.id"
         class="work-preview"
         :class="work.imageClass"
+        :data-id="work.id"
+        :ref="(element) => setWorkRef(element, work.id)"
         role="button"
         :tabindex="0"
         :aria-label="t(work.titleKey) + ' — ' + t('nav.portfolio')"
@@ -36,6 +91,12 @@ const navigateToPortfolio = () => {
         @keydown.enter="navigateToPortfolio"
         @keydown.space.prevent="navigateToPortfolio"
       >
+        <div
+          class="work-image"
+          :style="{
+            backgroundImage: visibleWorks[work.id] ? `url(${work.imageUrl})` : 'none',
+          }"
+        ></div>
         <div class="work-info">
           <div class="title-container">
             <h2>{{ t(work.titleKey) }}</h2>
@@ -146,13 +207,7 @@ const navigateToPortfolio = () => {
   cursor: pointer;
 }
 
-.work-preview:focus-visible {
-  outline: 2px solid var(--accent-clay);
-  outline-offset: 2px;
-}
-
-.work-preview::before {
-  content: '';
+.work-image {
   position: absolute;
   top: 0;
   left: 0;
@@ -160,8 +215,13 @@ const navigateToPortfolio = () => {
   bottom: 0;
   background-size: cover;
   background-position: center;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.work-preview:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 2px;
 }
 
 .work-preview::after {
@@ -180,20 +240,8 @@ const navigateToPortfolio = () => {
   transform: translateY(-8px);
 }
 
-.work-preview:hover::before {
+.work-preview:hover .work-image {
   transform: scale(1.05);
-}
-
-.funguy::before {
-  background-image: url('/images/funguy-full.jpg');
-}
-
-.rainbow::before {
-  background-image: url('/images/varaviksnene1.jpg');
-}
-
-.atgazend::before {
-  background-image: url('/images/atgazene.JPG');
 }
 
 .work-info {
