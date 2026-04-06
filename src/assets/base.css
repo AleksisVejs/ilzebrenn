@@ -16,9 +16,14 @@
   --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.15);
   --font-heading: 'Cormorant Garamond', serif;
   --font-body: 'Raleway', sans-serif;
+  --accent-clay-hover: #d9a070;
+  --accent-warm: #a67c52;
+  --bg-warm: #211e1a;
+  --bg-card: rgba(33, 30, 26, 0.6);
   --transition-smooth: 0.3s ease;
   --transition-cubic: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 *,
@@ -36,4 +41,28 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-clay) var(--bg-primary);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-clay);
+  border-radius: 4px;
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-clay-hover);
 }

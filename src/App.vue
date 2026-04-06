@@ -73,9 +73,15 @@ const closeMobileMenu = () => {
   document.body.style.overflow = ''
 }
 
+let scrollTicking = false
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50
-  showScrollTop.value = window.scrollY > 400
+  if (scrollTicking) return
+  scrollTicking = true
+  requestAnimationFrame(() => {
+    isScrolled.value = window.scrollY > 50
+    showScrollTop.value = window.scrollY > 400
+    scrollTicking = false
+  })
 }
 
 const scrollToTop = () => {
@@ -92,58 +98,66 @@ watch(locale, (newLocale) => {
   document.documentElement.lang = newLocale
 })
 
+let removeAfterEach = null
+
 onMounted(() => {
   document.documentElement.lang = locale.value
   cleanupUrl()
-  router.afterEach(() => {
+  removeAfterEach = router.afterEach(() => {
     cleanupUrlAfterNavigation()
   })
-  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('keydown', handleKeydown)
-  handleScroll()
+  requestAnimationFrame(() => {
+    handleScroll()
+  })
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
+  if (removeAfterEach) removeAfterEach()
+  document.body.style.overflow = ''
 })
 </script>
 
 <template>
   <div class="app-container">
     <header :class="{ scrolled: isScrolled }">
-      <div class="logo">
-        <RouterLink to="/">ilzebrenn</RouterLink>
-      </div>
+      <div class="header-inner">
+        <div class="logo">
+          <RouterLink to="/">ilzebrenn</RouterLink>
+        </div>
 
-      <button
-        class="mobile-menu-toggle"
-        :class="{ active: showMobileMenu }"
-        :aria-label="showMobileMenu ? 'Close menu' : 'Open menu'"
-        aria-controls="main-nav"
-        :aria-expanded="showMobileMenu"
-        @click="toggleMobileMenu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <nav id="main-nav" :class="{ 'mobile-open': showMobileMenu }" role="navigation" :aria-label="t('nav.home')">
         <button
-          class="language-toggle"
-          @click="toggleLanguage"
-          :aria-label="locale === 'lv' ? 'Switch to English' : 'Pārslēgt uz latviešu'"
+          class="mobile-menu-toggle"
+          :class="{ active: showMobileMenu }"
+          :aria-label="showMobileMenu ? 'Close menu' : 'Open menu'"
+          aria-controls="main-nav"
+          :aria-expanded="showMobileMenu"
+          @click="toggleMobileMenu"
         >
-          <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
-          <span class="lang-separator">/</span>
-          <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
-        <RouterLink to="/" @click="closeMobileMenu">{{ t('nav.home') }}</RouterLink>
-        <RouterLink to="/portfolio" @click="closeMobileMenu">{{ t('nav.portfolio') }}</RouterLink>
-        <RouterLink to="/biography" @click="closeMobileMenu">{{ t('nav.biography') }}</RouterLink>
-        <RouterLink to="/contact" @click="closeMobileMenu">{{ t('nav.contact') }}</RouterLink>
-      </nav>
+
+        <nav id="main-nav" :class="{ 'mobile-open': showMobileMenu }" role="navigation" :aria-label="t('nav.home')">
+          <RouterLink to="/" @click="closeMobileMenu">{{ t('nav.home') }}</RouterLink>
+          <RouterLink to="/portfolio" @click="closeMobileMenu">{{ t('nav.portfolio') }}</RouterLink>
+          <RouterLink to="/biography" @click="closeMobileMenu">{{ t('nav.biography') }}</RouterLink>
+          <RouterLink to="/contact" @click="closeMobileMenu">{{ t('nav.contact') }}</RouterLink>
+          <button
+            class="language-toggle"
+            @click="toggleLanguage"
+            :aria-label="locale === 'lv' ? 'Switch to English' : 'Pārslēgt uz latviešu'"
+          >
+            <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
+            <span class="lang-separator">/</span>
+            <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
+          </button>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -160,13 +174,16 @@ onUnmounted(() => {
       @click="scrollToTop"
       aria-label="Scroll to top"
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="18 15 12 9 6 15" />
       </svg>
     </button>
 
     <footer>
-      <p>&copy; {{ new Date().getFullYear() }} Ilze Brenn</p>
+      <div class="footer-inner">
+        <span class="footer-name">Ilze Brenn</span>
+        <span class="footer-copy">&copy; {{ new Date().getFullYear() }}</span>
+      </div>
     </footer>
   </div>
 </template>
@@ -186,8 +203,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: var(--bg-primary);
-  background-image: linear-gradient(to bottom, rgba(26, 23, 20, 0.97), rgba(26, 23, 20, 0.95));
-  background-blend-mode: overlay;
 }
 
 #app {
@@ -221,24 +236,26 @@ main {
 /* Page transitions */
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(8px);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
+/* ===== HEADER ===== */
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: 0 2rem;
+  height: 70px;
   background-color: transparent;
   position: fixed;
   top: 0;
@@ -247,112 +264,113 @@ header {
   width: 100%;
   z-index: 1000;
   transition: all var(--transition-bounce);
-  border-bottom: 1px solid var(--border-subtle);
 }
 
 header.scrolled {
-  background-color: var(--bg-primary-92);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(26, 23, 20, 0.92);
+  box-shadow: 0 1px 0 var(--border-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo a {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 300;
   color: var(--text-primary);
   text-decoration: none;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   transition: color var(--transition-smooth);
   font-family: var(--font-heading);
 }
 
-header.scrolled .logo a {
-  color: rgba(255, 255, 255, 0.95);
+.logo a:hover {
+  color: var(--accent-clay);
 }
 
 nav {
   display: flex;
-  gap: 2rem;
+  gap: 0.3rem;
   align-items: center;
 }
 
 nav a {
-  color: var(--text-primary);
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 0.82rem;
   font-weight: 400;
   position: relative;
-  padding: 0.5rem 0;
-  transition: all var(--transition-smooth);
+  padding: 0.5rem 0.9rem;
+  transition: color var(--transition-smooth);
   font-family: var(--font-body);
-}
-
-header.scrolled nav a {
-  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
 }
 
 nav a::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 0;
-  width: 0;
+  left: 0.9rem;
+  right: 0.9rem;
   height: 1px;
   background-color: var(--accent-clay);
-  transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
-  opacity: 0.9;
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+nav a:hover,
+nav a.router-link-active {
+  color: var(--text-primary);
 }
 
 nav a:hover::after,
 nav a.router-link-active::after {
-  width: 100%;
-}
-
-nav a:hover {
-  opacity: 0.7;
+  transform: scaleX(1);
 }
 
 .language-toggle {
   background: none;
-  border: 1px solid var(--border-medium);
-  color: var(--text-primary);
-  border-radius: 0;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: all var(--transition-smooth);
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
   font-family: var(--font-body);
-}
-
-header.scrolled .language-toggle {
-  border-color: var(--border-medium);
-  color: rgba(255, 255, 255, 0.9);
+  margin-left: 0.6rem;
+  letter-spacing: 0.5px;
 }
 
 .language-toggle:hover {
-  background-color: var(--accent-clay-light);
   border-color: var(--accent-clay);
+  color: var(--text-primary);
 }
 
 .lang-option {
-  opacity: 0.6;
+  opacity: 0.5;
   transition: opacity var(--transition-smooth);
 }
 
 .lang-option.selected {
   opacity: 1;
-  font-weight: 500;
   color: var(--accent-clay);
 }
 
 .lang-separator {
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
+/* ===== MOBILE MENU ===== */
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -370,13 +388,13 @@ header.scrolled .language-toggle {
 .mobile-menu-toggle span {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 1.5px;
   background-color: var(--text-primary);
   transition: all var(--transition-smooth);
 }
 
 .mobile-menu-toggle.active span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+  transform: translateY(7.5px) rotate(45deg);
 }
 
 .mobile-menu-toggle.active span:nth-child(2) {
@@ -384,19 +402,19 @@ header.scrolled .language-toggle {
 }
 
 .mobile-menu-toggle.active span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-7.5px) rotate(-45deg);
 }
 
-/* Scroll to top button */
+/* ===== SCROLL TO TOP ===== */
 .scroll-top-btn {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  width: 44px;
-  height: 44px;
-  background-color: var(--bg-primary-92);
+  width: 42px;
+  height: 42px;
+  background-color: rgba(26, 23, 20, 0.9);
   border: 1px solid var(--border-light);
-  color: var(--accent-clay);
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -408,34 +426,54 @@ header.scrolled .language-toggle {
 }
 
 .scroll-top-btn:hover {
-  background-color: var(--accent-clay);
-  color: var(--text-primary);
+  color: var(--accent-clay);
   border-color: var(--accent-clay);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
+/* ===== FOOTER ===== */
 footer {
-  background-color: rgba(26, 23, 20, 0.98);
-  color: var(--text-muted);
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.9rem;
+  background-color: var(--bg-primary);
+  color: var(--text-faint);
+  padding: 2.5rem 2rem;
   position: relative;
   font-family: var(--font-body);
-  border-top: 1px solid var(--border-accent);
+  border-top: 1px solid var(--border-subtle);
 }
 
 footer::before {
   content: '';
   position: absolute;
-  top: -3px;
+  top: -1px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 5px;
-  background: linear-gradient(to right, transparent, var(--accent-clay), transparent);
+  width: 60px;
+  height: 1px;
+  background: var(--accent-clay);
+  opacity: 0.5;
 }
 
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: flex;
@@ -456,9 +494,9 @@ footer::before {
     pointer-events: none;
     transition: all var(--transition-bounce);
     z-index: 1000;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    gap: 0;
   }
 
   nav.mobile-open {
@@ -468,43 +506,39 @@ footer::before {
   }
 
   nav a {
-    color: var(--text-primary);
-    font-size: 2rem;
-    margin: 0.8rem 0;
-    padding: 0.5rem 0;
-    opacity: 0.8;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    padding: 0.8rem 0;
     font-family: var(--font-heading);
     text-align: center;
+    letter-spacing: 1px;
+  }
+
+  nav a::after {
+    left: 0;
+    right: 0;
+    bottom: 0.4rem;
   }
 
   nav a:hover,
   nav a.router-link-active {
-    opacity: 1;
     color: var(--accent-clay);
-  }
-
-  nav a::after {
-    height: 1px;
-    bottom: -2px;
   }
 
   .language-toggle {
     margin: 2rem auto 0;
+    margin-left: auto;
+    margin-right: auto;
     border-color: var(--border-medium);
-    color: var(--text-primary);
-    font-size: 1rem;
-    padding: 0.6rem 1.2rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
   }
 
-  .mobile-menu-toggle span {
-    width: 100%;
-    height: 2px;
-    background-color: var(--text-primary);
-    transition: all var(--transition-smooth);
-  }
-
-  .mobile-menu-toggle.active span {
-    background-color: var(--text-primary);
+  .footer-inner {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
   }
 }
 </style>

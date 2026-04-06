@@ -7,7 +7,16 @@
   },
   "home": {
     "title": "Ilze Brenn",
-    "subtitle": "Tekstilmāksliniece"
+    "subtitle": "Tekstilmāksliniece",
+    "scroll_hint": "Uzzināt",
+    "statement_heading": "Kur pavediens satiek redzējumu",
+    "statement_body": "Izpētot dabisko materiālu un laikmetīgās mākslas krustpunktu caur tekstila instalācijām un skulpturālām formām — katrs darbs ir dialogs starp pastāvību un trauslumu.",
+    "featured_heading": "Izlases darbi",
+    "featured_subheading": "Instalācijas un tekstilmāksla",
+    "cta_heading": "Katrs pavediens stāsta stāstu",
+    "cta_body": "Iepazīstiet pilnu tekstila instalāciju, gaismas objektu un skulpturālo darbu kolekciju.",
+    "cta_portfolio": "Skatīt visu portfolio",
+    "cta_contact": "Sazināties"
   },
   "portfolio": {
     "title": "Portfolio",
@@ -67,6 +76,7 @@
     }
   },
   "contact": {
+    "title": "Sazināsimies",
     "intro": "Sazinieties ar mani par sadarbību, izstādēm vai jebkādiem jautājumiem par manu darbu.",
     "email": "E-pasts",
     "email_desc": "Saziņai par pasūtījumiem, izstādēm vai sadarbību",

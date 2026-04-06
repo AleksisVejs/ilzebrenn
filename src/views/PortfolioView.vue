@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, reactive } from 'vue'
 
 const { t } = useI18n()
 
@@ -73,6 +73,18 @@ const imagesLoaded = ref({})
 const touchStartX = ref(0)
 const touchEndX = ref(0)
 const savedScrollY = ref(0)
+const visibleItems = reactive({})
+const itemRefs = ref({})
+
+let itemObserver = null
+
+const setItemRef = (el, id) => {
+  if (!el) {
+    delete itemRefs.value[id]
+    return
+  }
+  itemRefs.value[id] = el
+}
 
 const preloadWorkImages = (work) => {
   work.images.slice(0, 2).forEach((image) => {
@@ -111,6 +123,21 @@ onMounted(() => {
       imagesLoaded.value[work.images[work.thumbnailIndex].url] = true
     }
   })
+
+  itemObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.dataset.id
+          if (id) visibleItems[id] = true
+          itemObserver.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: 0.1 },
+  )
+
+  Object.values(itemRefs.value).forEach((el) => itemObserver.observe(el))
 })
 
 watch(selectedWork, (newWork) => {
@@ -158,10 +185,6 @@ const prevImage = () => {
   }
 }
 
-const goToImage = (index) => {
-  currentImageIndex.value = index
-}
-
 const handleKeydown = (e) => {
   if (!selectedWork.value) return
   switch (e.key) {
@@ -183,6 +206,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown)
+  if (itemObserver) itemObserver.disconnect()
   document.body.style.position = ''
   document.body.style.width = ''
   document.body.style.top = ''
@@ -193,19 +217,20 @@ onUnmounted(() => {
 <template>
   <div class="portfolio">
     <div class="portfolio-header">
+      <span class="header-label">{{ t('portfolio.installations') }}</span>
       <h1>{{ t('portfolio.title') }}</h1>
       <p class="portfolio-intro">{{ t('portfolio.intro') }}</p>
     </div>
 
-    <div class="category-header installations-header">
-      <h2>{{ t('portfolio.installations') || 'Installations' }}</h2>
-    </div>
-
     <div class="works-grid">
-      <div
-        v-for="work in works"
+      <article
+        v-for="(work, index) in works"
         :key="work.id"
         class="work-item"
+        :class="{ visible: visibleItems[work.id] }"
+        :data-id="work.id"
+        :ref="(el) => setItemRef(el, work.id)"
+        :style="{ transitionDelay: `${index * 0.12}s` }"
         role="button"
         :tabindex="0"
         :aria-label="work.title + ' — ' + work.year"
@@ -213,18 +238,24 @@ onUnmounted(() => {
         @keydown.enter="openWork(work)"
         @keydown.space.prevent="openWork(work)"
       >
-        <div
-          class="work-image"
-          :style="{ backgroundImage: 'url(' + work.images[work.thumbnailIndex].url + ')' }"
-        >
-          <div class="work-overlay">
-            <div class="work-info">
-              <h2>{{ work.title }}</h2>
-              <p class="work-meta">{{ work.year }} — {{ work.category }}</p>
-            </div>
+        <div class="work-item__image-wrap">
+          <div
+            class="work-item__image"
+            :style="{ backgroundImage: 'url(' + work.images[work.thumbnailIndex].url + ')' }"
+          ></div>
+        </div>
+        <div class="work-item__overlay"></div>
+        <div class="work-item__content">
+          <span class="work-item__category">{{ work.category }}</span>
+          <h2 class="work-item__title">{{ work.title }}</h2>
+          <div class="work-item__meta">
+            <span>{{ work.year }}</span>
+            <span class="meta-dot"></span>
+            <span>{{ work.material }}</span>
           </div>
         </div>
-      </div>
+        <div class="work-item__border"></div>
+      </article>
     </div>
 
     <Transition name="modal">
@@ -237,7 +268,9 @@ onUnmounted(() => {
         @click.self="closeWork"
       >
         <button class="close-button" @click="closeWork" aria-label="Close">
-          <span class="close-icon">&times;</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
 
         <div class="modal-content">
@@ -251,9 +284,7 @@ onUnmounted(() => {
               role="img"
               :aria-label="selectedWork.images[currentImageIndex].alt"
               :style="{ backgroundImage: 'url(' + selectedWork.images[currentImageIndex].url + ')' }"
-            >
-              <div class="modal-image-overlay"></div>
-            </div>
+            ></div>
 
             <button
               v-if="selectedWork.images.length > 1"
@@ -261,7 +292,9 @@ onUnmounted(() => {
               @click.stop="prevImage"
               aria-label="Previous image"
             >
-              &#8249;
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
             </button>
             <button
               v-if="selectedWork.images.length > 1"
@@ -269,29 +302,24 @@ onUnmounted(() => {
               @click.stop="nextImage"
               aria-label="Next image"
             >
-              &#8250;
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
             </button>
 
             <div
               v-if="selectedWork.images.length > 1"
-              class="image-indicators"
-              role="tablist"
-              aria-label="Image gallery"
+              class="image-counter"
             >
-              <button
-                v-for="(image, index) in selectedWork.images"
-                :key="index"
-                :class="['indicator', { active: currentImageIndex === index }]"
-                :aria-label="'Image ' + (index + 1) + ' of ' + selectedWork.images.length"
-                :aria-selected="currentImageIndex === index"
-                role="tab"
-                @click.stop="goToImage(index)"
-              ></button>
+              {{ currentImageIndex + 1 }} / {{ selectedWork.images.length }}
             </div>
           </div>
 
           <div class="modal-info">
-            <h2>{{ selectedWork.title }}</h2>
+            <div class="modal-info__head">
+              <span class="modal-info__category">{{ selectedWork.category }}</span>
+              <h2>{{ selectedWork.title }}</h2>
+            </div>
             <div class="work-details">
               <div class="detail-item">
                 <span class="detail-label">{{ t('portfolio.details.year') }}</span>
@@ -306,6 +334,7 @@ onUnmounted(() => {
                 <span class="detail-value">{{ selectedWork.dimensions }}</span>
               </div>
             </div>
+            <div class="modal-info__divider"></div>
             <p class="work-description">{{ selectedWork.description }}</p>
           </div>
         </div>
@@ -317,86 +346,72 @@ onUnmounted(() => {
 <style scoped>
 .portfolio {
   min-height: 100vh;
-  padding: 120px 0 4rem;
+  padding: 0 0 6rem;
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
 
+/* ===== HEADER ===== */
 .portfolio-header {
-  max-width: 1200px;
-  margin: 0 auto 4rem;
-  padding: 0 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10rem 2rem 4rem;
   text-align: center;
 }
 
-.portfolio-header h1 {
-  font-size: 3.5rem;
-  font-weight: 300;
-  margin-bottom: 2.5rem;
-  letter-spacing: 1px;
-  font-family: var(--font-heading);
-  position: relative;
-  display: inline-block;
+.header-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent-clay);
+  margin-bottom: 1.2rem;
 }
 
-.portfolio-header h1::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--accent-clay);
+.portfolio-header h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 300;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  font-family: var(--font-heading);
 }
 
 .portfolio-intro {
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
-  font-size: 1.2rem;
-  line-height: 1.8;
+  font-size: 1.1rem;
+  line-height: 1.9;
   font-family: var(--font-body);
   font-weight: 300;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
-.category-header {
-  max-width: 1200px;
-  margin: 0 auto 2rem;
-  padding: 0 2rem;
-  text-align: left;
-}
-
-.category-header h2 {
-  font-size: 2.2rem;
-  font-weight: 300;
-  color: var(--text-primary);
-  font-family: var(--font-heading);
-  position: relative;
-  margin-bottom: 1rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.installations-header {
-  margin-top: 3rem;
-}
-
+/* ===== WORKS GRID ===== */
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
 .work-item {
-  height: 400px;
   position: relative;
   overflow: hidden;
-  border-radius: 2px;
-  box-shadow: var(--shadow-soft);
-  transition: transform var(--transition-cubic);
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.work-item.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .work-item:focus-visible {
@@ -404,88 +419,120 @@ onUnmounted(() => {
   outline-offset: 2px;
 }
 
-.work-item::before {
-  content: '';
+.work-item__image-wrap {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 1px solid var(--border-light);
-  z-index: 2;
-  pointer-events: none;
+  inset: 0;
+  overflow: hidden;
 }
 
-.work-item:hover {
-  transform: translateY(-8px);
-}
-
-.work-image {
-  width: 100%;
-  height: 100%;
+.work-item__image {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.work-item:hover .work-image {
+.work-item:hover .work-item__image {
   transform: scale(1.05);
 }
 
-.work-overlay {
+.work-item__overlay {
   position: absolute;
-  top: 0;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(26, 23, 20, 0.4) 65%,
+    rgba(26, 23, 20, 0.92) 100%
+  );
+  z-index: 1;
+}
+
+.work-item__overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    rgba(26, 23, 20, 0.35) 55%,
+    rgba(26, 23, 20, 0.88) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.work-item:hover .work-item__overlay::after {
+  opacity: 1;
+}
+
+.work-item__content {
+  position: absolute;
+  bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(26, 23, 20, 0),
-    rgba(26, 23, 20, 0.3) 60%,
-    rgba(26, 23, 20, 0.8)
-  );
-  transition: background 0.4s ease;
+  right: 0;
+  padding: 2rem 2.5rem;
+  z-index: 2;
   display: flex;
-  align-items: flex-end;
-  padding: 1.5rem;
-  z-index: 1;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 0.5rem;
+  transform: translateY(0);
+  transition: transform var(--transition-bounce);
 }
 
-.work-item:hover .work-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(26, 23, 20, 0.2),
-    rgba(26, 23, 20, 0.5) 60%,
-    rgba(26, 23, 20, 0.9)
-  );
+.work-item:hover .work-item__content {
+  transform: translateY(-6px);
 }
 
-.work-info {
-  color: var(--text-primary);
-  z-index: 1;
-}
-
-.work-info h2 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  font-weight: 300;
-  font-family: var(--font-heading);
-  position: relative;
-  display: inline-block;
-  padding-right: 30px;
-}
-
-.work-meta {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
+.work-item__category {
   font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-clay);
 }
 
-/* Modal transitions */
+.work-item__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.work-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.meta-dot {
+  width: 3px;
+  height: 3px;
+  background-color: var(--accent-clay);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.work-item__border {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ===== MODAL ===== */
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.35s ease;
 }
 
 .modal-enter-from,
@@ -495,27 +542,24 @@ onUnmounted(() => {
 
 .work-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bg-primary-95);
+  inset: 0;
+  background-color: rgba(10, 8, 6, 0.92);
   z-index: 1010;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
-  backdrop-filter: blur(8px);
+  padding: 1rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .close-button {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 1.5rem;
+  right: 1.5rem;
   background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: 2rem;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
   cursor: pointer;
   z-index: 1011;
   width: 44px;
@@ -527,8 +571,8 @@ onUnmounted(() => {
 }
 
 .close-button:hover {
-  color: var(--accent-clay);
-  transform: rotate(90deg);
+  color: var(--text-primary);
+  border-color: var(--accent-clay);
 }
 
 .close-button:focus-visible {
@@ -539,20 +583,20 @@ onUnmounted(() => {
 .modal-content {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  height: 85vh;
+  max-width: 1100px;
+  max-height: 90vh;
   width: 100%;
   background-color: var(--bg-primary);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  position: relative;
   border: 1px solid var(--border-subtle);
+  overflow: hidden;
 }
 
 .modal-image-container {
   width: 100%;
-  height: 60%;
+  height: 55vh;
   position: relative;
   overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .modal-image {
@@ -562,31 +606,20 @@ onUnmounted(() => {
   background-position: center;
   background-repeat: no-repeat;
   transition: opacity 0.3s ease;
-  position: relative;
-}
-
-.modal-image-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(26, 23, 20, 0.3), transparent 25%);
 }
 
 .nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(26, 23, 20, 0.6);
+  background: rgba(26, 23, 20, 0.7);
   border: 1px solid var(--border-light);
   width: 44px;
   height: 44px;
-  font-size: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   cursor: pointer;
   z-index: 1;
   transition: all var(--transition-smooth);
@@ -603,6 +636,7 @@ onUnmounted(() => {
 .nav-button:hover {
   background: var(--accent-clay);
   color: var(--text-primary);
+  border-color: var(--accent-clay);
 }
 
 .nav-button:focus-visible {
@@ -610,100 +644,87 @@ onUnmounted(() => {
   outline-offset: 2px;
 }
 
-.image-indicators {
+.image-counter {
   position: absolute;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 1;
-  padding: 10px;
-  background-color: rgba(26, 23, 20, 0.3);
-  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  background: rgba(26, 23, 20, 0.6);
+  padding: 0.4rem 1rem;
   backdrop-filter: blur(4px);
-}
-
-.indicator {
-  width: 8px;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: none;
-  cursor: pointer;
-  border-radius: 0;
-  transition: all var(--transition-smooth);
-  padding: 0;
-  transform: rotate(45deg);
-}
-
-.indicator.active {
-  background-color: var(--accent-clay);
-  transform: rotate(45deg) scale(1.2);
-  box-shadow: 0 0 5px rgba(199, 140, 96, 0.5);
-}
-
-.indicator:focus-visible {
-  outline: 2px solid var(--accent-clay);
-  outline-offset: 4px;
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .modal-info {
-  padding: 2rem;
+  padding: 2.5rem;
   overflow-y: auto;
   flex: 1;
-  border-top: 1px solid var(--border-subtle);
+}
+
+.modal-info__head {
+  margin-bottom: 2rem;
+}
+
+.modal-info__category {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-clay);
+  margin-bottom: 0.8rem;
 }
 
 .modal-info h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 300;
   color: var(--text-primary);
   font-family: var(--font-heading);
-  position: relative;
-  display: inline-block;
-}
-
-.modal-info h2::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--accent-clay);
+  line-height: 1.2;
 }
 
 .work-details {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
   font-family: var(--font-body);
 }
 
 .detail-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .detail-label {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: var(--text-faint);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .detail-value {
-  font-size: 1.1rem;
-  color: var(--text-primary);
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.modal-info__divider {
+  width: 40px;
+  height: 1px;
+  background-color: var(--accent-clay);
+  opacity: 0.4;
+  margin: 2rem 0;
 }
 
 .work-description {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text-muted);
   font-family: var(--font-body);
   font-weight: 300;
   white-space: pre-line;
@@ -712,99 +733,103 @@ onUnmounted(() => {
 @media (min-width: 768px) {
   .modal-content {
     flex-direction: row;
-    height: auto;
     max-height: 85vh;
   }
 
   .modal-image-container {
-    width: 60%;
+    width: 58%;
     height: auto;
   }
 
   .modal-info {
-    width: 40%;
-    border-top: none;
-    border-left: 1px solid var(--border-subtle);
+    width: 42%;
   }
 }
 
 @media (max-width: 768px) {
   .works-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    padding: 0 1.5rem;
   }
 
-  .portfolio-header h1 {
-    font-size: 2.8rem;
+  .portfolio-header {
+    padding: 8rem 1.5rem 3rem;
   }
 
-  .work-item {
-    height: 320px;
+  .work-item__content {
+    padding: 1.5rem 2rem;
   }
 
-  .work-info h2 {
-    font-size: 1.5rem;
+  .work-modal {
+    padding: 0;
+    align-items: stretch;
   }
 
   .modal-content {
-    height: 90vh;
+    max-height: 100vh;
+    max-width: 100%;
+    overflow-y: auto;
+    border: none;
   }
 
   .modal-image-container {
-    height: 50%;
+    height: auto;
+    min-height: 50vh;
+    aspect-ratio: 4 / 3;
+  }
+
+  .modal-image {
+    background-size: cover;
+    background-position: center;
+  }
+
+  .modal-info {
+    padding: 2rem 1.5rem;
+  }
+
+  .close-button {
+    background: rgba(26, 23, 20, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+@media (max-width: 480px) {
+  .work-item__meta {
+    flex-wrap: wrap;
+  }
+
+  .modal-image-container {
+    min-height: 45vh;
+  }
+
+  .close-button {
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 38px;
+    height: 38px;
   }
 
   .nav-button {
     width: 38px;
     height: 38px;
-    font-size: 1.4rem;
   }
 
-  .image-indicators {
-    bottom: 0.5rem;
-    gap: 6px;
-    padding: 6px 8px;
+  .modal-info {
+    padding: 1.5rem;
   }
 
-  .indicator {
-    width: 6px;
-    height: 6px;
-  }
-}
-
-@media (max-width: 480px) {
-  .works-grid {
-    grid-template-columns: 1fr;
+  .work-details {
+    gap: 1.5rem;
   }
 
-  .portfolio-header h1 {
-    font-size: 2.2rem;
+  .modal-info__divider {
+    margin: 1.5rem 0;
   }
 
-  .portfolio-intro {
-    font-size: 1rem;
-  }
-
-  .close-button {
-    top: 1rem;
-    right: 1rem;
-  }
-
-  .nav-button {
-    width: 34px;
-    height: 34px;
-    font-size: 1.2rem;
-  }
-
-  .image-indicators {
-    bottom: 0.3rem;
-    gap: 5px;
-    padding: 5px 7px;
-  }
-
-  .indicator {
-    width: 5px;
-    height: 5px;
+  .work-description {
+    font-size: 0.95rem;
   }
 }
 </style>
