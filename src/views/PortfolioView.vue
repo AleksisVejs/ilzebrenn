@@ -1,14 +1,11 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 const { t } = useI18n()
 
-// Use absolute paths to avoid any routing issues
 const imagePath = (path) => {
-  // Remove any leading slash to avoid double slashes
   const cleanPath = path.startsWith('/') ? path.substring(1) : path
-  // Use origin + path for absolute URLs
   return window.location.origin + '/' + cleanPath
 }
 
@@ -21,22 +18,9 @@ const getWorks = () => [
     material: t('portfolio.works.funguy.material'),
     dimensions: '150x30x30cm',
     images: [
-      {
-        url: imagePath('images/funguy-full.jpg'),
-        alt: 'Fun-guy installation full view',
-      },
-      {
-        url: imagePath('images/funguy1.jpg'),
-        alt: 'Fun-guy installation detail 1',
-      },
-      {
-        url: imagePath('images/hero-bg.jpg'),
-        alt: 'Fun-guy installation detail 3',
-      },
-      {
-        url: imagePath('images/funguy4.jpg'),
-        alt: 'Fun-guy installation detail 2',
-      },
+      { url: imagePath('images/funguy-full.jpg'), alt: 'Fun-guy installation full view' },
+      { url: imagePath('images/funguy1.jpg'), alt: 'Fun-guy installation detail 1' },
+      { url: imagePath('images/funguy4.jpg'), alt: 'Fun-guy installation detail 2' },
     ],
     thumbnailIndex: 0,
     category: t('portfolio.works.funguy.category'),
@@ -49,38 +33,14 @@ const getWorks = () => [
     material: t('portfolio.works.rainbow.material'),
     dimensions: '200x150cm',
     images: [
-      {
-        url: imagePath('images/varaviksnene1.jpg'),
-        alt: 'Varavīksnene view 1',
-      },
-      {
-        url: imagePath('images/varaviksnene2.jpg'),
-        alt: 'Varavīksnene view 2',
-      },
-      {
-        url: imagePath('images/varaviksnene3.jpg'),
-        alt: 'Varavīksnene view 3',
-      },
-      {
-        url: imagePath('images/varaviksnene4.jpg'),
-        alt: 'Varavīksnene view 4',
-      },
-      {
-        url: imagePath('images/varaviksnene5.jpg'),
-        alt: 'Varavīksnene view 5',
-      },
-      {
-        url: imagePath('images/varaviksnene6.jpg'),
-        alt: 'Varavīksnene view 6',
-      },
-      {
-        url: imagePath('images/varaviksnene7.jpg'),
-        alt: 'Varavīksnene view 7',
-      },
-      {
-        url: imagePath('images/varaviksnene8.jpg'),
-        alt: 'Varavīksnene view 8',
-      },
+      { url: imagePath('images/varaviksnene1.jpg'), alt: 'Varavīksnene view 1' },
+      { url: imagePath('images/varaviksnene2.jpg'), alt: 'Varavīksnene view 2' },
+      { url: imagePath('images/varaviksnene3.jpg'), alt: 'Varavīksnene view 3' },
+      { url: imagePath('images/varaviksnene4.jpg'), alt: 'Varavīksnene view 4' },
+      { url: imagePath('images/varaviksnene5.jpg'), alt: 'Varavīksnene view 5' },
+      { url: imagePath('images/varaviksnene6.jpg'), alt: 'Varavīksnene view 6' },
+      { url: imagePath('images/varaviksnene7.jpg'), alt: 'Varavīksnene view 7' },
+      { url: imagePath('images/varaviksnene8.jpg'), alt: 'Varavīksnene view 8' },
     ],
     thumbnailIndex: 0,
     category: t('portfolio.works.rainbow.category'),
@@ -93,34 +53,13 @@ const getWorks = () => [
     material: t('portfolio.works.atgazend.material'),
     dimensions: t('portfolio.works.atgazend.dimensions'),
     images: [
-      {
-        url: imagePath('images/atgazene.JPG'),
-        alt: 'Atgazend installation main view',
-      },
-      {
-        url: imagePath('images/atgazene1.jpg'),
-        alt: 'Atgazend installation detail 1',
-      },
-      {
-        url: imagePath('images/atgazene2.jpg'),
-        alt: 'Atgazend installation detail 2',
-      },
-      {
-        url: imagePath('images/atgazene3.jpg'),
-        alt: 'Atgazend installation detail 3',
-      },
-      {
-        url: imagePath('images/atgazene4.jpg'),
-        alt: 'Atgazend installation detail 4',
-      },
-      {
-        url: imagePath('images/atgazene5.jpg'),
-        alt: 'Atgazend installation detail 5',
-      },
-      {
-        url: imagePath('images/atgazene6.JPG'),
-        alt: 'Atgazend installation detail 6',
-      },
+      { url: imagePath('images/atgazene.JPG'), alt: 'Atgazend installation main view' },
+      { url: imagePath('images/atgazene1.jpg'), alt: 'Atgazend installation detail 1' },
+      { url: imagePath('images/atgazene2.jpg'), alt: 'Atgazend installation detail 2' },
+      { url: imagePath('images/atgazene3.jpg'), alt: 'Atgazend installation detail 3' },
+      { url: imagePath('images/atgazene4.jpg'), alt: 'Atgazend installation detail 4' },
+      { url: imagePath('images/atgazene5.jpg'), alt: 'Atgazend installation detail 5' },
+      { url: imagePath('images/atgazene6.JPG'), alt: 'Atgazend installation detail 6' },
     ],
     thumbnailIndex: 0,
     category: t('portfolio.works.atgazend.category'),
@@ -133,87 +72,73 @@ const currentImageIndex = ref(0)
 const imagesLoaded = ref({})
 const touchStartX = ref(0)
 const touchEndX = ref(0)
+const savedScrollY = ref(0)
 
-// Preload images for better performance
-const preloadImages = () => {
-  works.value.forEach((work) => {
-    work.images.forEach((image) => {
+const preloadWorkImages = (work) => {
+  work.images.forEach((image) => {
+    if (!imagesLoaded.value[image.url]) {
       const img = new Image()
       img.src = image.url
       img.onload = () => {
         imagesLoaded.value[image.url] = true
       }
-    })
+    }
   })
 }
 
-// Handle touch events for swiping
 const handleTouchStart = (e) => {
   touchStartX.value = e.touches[0].clientX
 }
 
 const handleTouchEnd = (e) => {
   touchEndX.value = e.changedTouches[0].clientX
-  handleSwipe()
-}
-
-const handleSwipe = () => {
-  const minSwipeDistance = 50 // Minimum distance required for a swipe
+  const minSwipeDistance = 50
   const swipeDistance = touchEndX.value - touchStartX.value
-
   if (Math.abs(swipeDistance) >= minSwipeDistance && selectedWork.value) {
     if (swipeDistance > 0) {
-      // Swipe right - go to previous image
       prevImage()
     } else {
-      // Swipe left - go to next image
       nextImage()
     }
   }
 }
 
 onMounted(() => {
-  // Preload images when component mounts
-  preloadImages()
+  works.value.forEach((work) => {
+    const img = new Image()
+    img.src = work.images[work.thumbnailIndex].url
+    img.onload = () => {
+      imagesLoaded.value[work.images[work.thumbnailIndex].url] = true
+    }
+  })
 })
 
-// Preload images when a work is selected
 watch(selectedWork, (newWork) => {
   if (newWork) {
-    newWork.images.forEach((image) => {
-      if (!imagesLoaded.value[image.url]) {
-        const img = new Image()
-        img.src = image.url
-        img.onload = () => {
-          imagesLoaded.value[image.url] = true
-        }
-      }
-    })
+    preloadWorkImages(newWork)
   }
 })
 
 const openWork = (work) => {
-  // Cleanup URL if needed before opening work
   if (window.location.pathname.includes('/?') || window.location.search) {
     const cleanPath = window.location.pathname.split('/?')[0]
     window.history.replaceState(null, null, cleanPath)
   }
-
   selectedWork.value = work
   currentImageIndex.value = 0
+  savedScrollY.value = window.scrollY
   document.body.style.overflow = 'hidden'
   document.body.style.position = 'fixed'
   document.body.style.width = '100%'
-  document.body.style.top = `-${window.scrollY}px`
+  document.body.style.top = `-${savedScrollY.value}px`
 }
 
 const closeWork = () => {
-  const scrollY = document.body.style.top
   document.body.style.position = ''
   document.body.style.width = ''
   document.body.style.top = ''
   document.body.style.overflow = ''
-  window.scrollTo(0, parseInt(scrollY || '0') * -1)
+  window.scrollTo(0, savedScrollY.value)
   selectedWork.value = null
   currentImageIndex.value = 0
 }
@@ -236,6 +161,33 @@ const prevImage = () => {
 const goToImage = (index) => {
   currentImageIndex.value = index
 }
+
+const handleKeydown = (e) => {
+  if (!selectedWork.value) return
+  switch (e.key) {
+    case 'Escape':
+      closeWork()
+      break
+    case 'ArrowLeft':
+      prevImage()
+      break
+    case 'ArrowRight':
+      nextImage()
+      break
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+  document.body.style.position = ''
+  document.body.style.width = ''
+  document.body.style.top = ''
+  document.body.style.overflow = ''
+})
 </script>
 
 <template>
@@ -250,7 +202,17 @@ const goToImage = (index) => {
     </div>
 
     <div class="works-grid">
-      <div v-for="work in works" :key="work.id" class="work-item" @click="openWork(work)">
+      <div
+        v-for="work in works"
+        :key="work.id"
+        class="work-item"
+        role="button"
+        :tabindex="0"
+        :aria-label="work.title + ' — ' + work.year"
+        @click="openWork(work)"
+        @keydown.enter="openWork(work)"
+        @keydown.space.prevent="openWork(work)"
+      >
         <div
           class="work-image"
           :style="{ backgroundImage: 'url(' + work.images[work.thumbnailIndex].url + ')' }"
@@ -258,79 +220,97 @@ const goToImage = (index) => {
           <div class="work-overlay">
             <div class="work-info">
               <h2>{{ work.title }}</h2>
-              <p class="work-meta">{{ work.year }} - {{ work.category }}</p>
+              <p class="work-meta">{{ work.year }} — {{ work.category }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Work Detail Modal -->
-    <div v-if="selectedWork" class="work-modal" @click.self="closeWork">
-      <button class="close-button" @click="closeWork">
-        <span class="close-icon">×</span>
-      </button>
+    <Transition name="modal">
+      <div
+        v-if="selectedWork"
+        class="work-modal"
+        role="dialog"
+        :aria-label="selectedWork.title"
+        aria-modal="true"
+        @click.self="closeWork"
+      >
+        <button class="close-button" @click="closeWork" aria-label="Close">
+          <span class="close-icon">&times;</span>
+        </button>
 
-      <div class="modal-content">
-        <div
-          class="modal-image-container"
-          @touchstart="handleTouchStart"
-          @touchend="handleTouchEnd"
-        >
+        <div class="modal-content">
           <div
-            class="modal-image"
-            :style="{ backgroundImage: 'url(' + selectedWork.images[currentImageIndex].url + ')' }"
+            class="modal-image-container"
+            @touchstart="handleTouchStart"
+            @touchend="handleTouchEnd"
           >
-            <div class="modal-image-overlay"></div>
-          </div>
+            <div
+              class="modal-image"
+              role="img"
+              :aria-label="selectedWork.images[currentImageIndex].alt"
+              :style="{ backgroundImage: 'url(' + selectedWork.images[currentImageIndex].url + ')' }"
+            >
+              <div class="modal-image-overlay"></div>
+            </div>
 
-          <!-- Image Navigation -->
-          <button
-            v-if="selectedWork.images.length > 1"
-            class="nav-button prev"
-            @click.stop="prevImage"
-          >
-            ‹
-          </button>
-          <button
-            v-if="selectedWork.images.length > 1"
-            class="nav-button next"
-            @click.stop="nextImage"
-          >
-            ›
-          </button>
-
-          <!-- Image Indicators -->
-          <div v-if="selectedWork.images.length > 1" class="image-indicators">
             <button
-              v-for="(image, index) in selectedWork.images"
-              :key="index"
-              :class="['indicator', { active: currentImageIndex === index }]"
-              @click.stop="goToImage(index)"
-            ></button>
-          </div>
-        </div>
+              v-if="selectedWork.images.length > 1"
+              class="nav-button prev"
+              @click.stop="prevImage"
+              aria-label="Previous image"
+            >
+              &#8249;
+            </button>
+            <button
+              v-if="selectedWork.images.length > 1"
+              class="nav-button next"
+              @click.stop="nextImage"
+              aria-label="Next image"
+            >
+              &#8250;
+            </button>
 
-        <div class="modal-info">
-          <h2>{{ selectedWork.title }}</h2>
-          <div class="work-details">
-            <div class="detail-item">
-              <span class="detail-label">{{ t('portfolio.details.year') }}</span>
-              <span class="detail-value">{{ selectedWork.year }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">{{ t('portfolio.details.material') }}</span>
-              <span class="detail-value">{{ selectedWork.material }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">{{ t('portfolio.details.dimensions') }}</span>
-              <span class="detail-value">{{ selectedWork.dimensions }}</span>
+            <div
+              v-if="selectedWork.images.length > 1"
+              class="image-indicators"
+              role="tablist"
+              aria-label="Image gallery"
+            >
+              <button
+                v-for="(image, index) in selectedWork.images"
+                :key="index"
+                :class="['indicator', { active: currentImageIndex === index }]"
+                :aria-label="'Image ' + (index + 1) + ' of ' + selectedWork.images.length"
+                :aria-selected="currentImageIndex === index"
+                role="tab"
+                @click.stop="goToImage(index)"
+              ></button>
             </div>
           </div>
-          <p class="work-description">{{ selectedWork.description }}</p>
+
+          <div class="modal-info">
+            <h2>{{ selectedWork.title }}</h2>
+            <div class="work-details">
+              <div class="detail-item">
+                <span class="detail-label">{{ t('portfolio.details.year') }}</span>
+                <span class="detail-value">{{ selectedWork.year }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">{{ t('portfolio.details.material') }}</span>
+                <span class="detail-value">{{ selectedWork.material }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">{{ t('portfolio.details.dimensions') }}</span>
+                <span class="detail-value">{{ selectedWork.dimensions }}</span>
+              </div>
+            </div>
+            <p class="work-description">{{ selectedWork.description }}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -338,8 +318,8 @@ const goToImage = (index) => {
 .portfolio {
   min-height: 100vh;
   padding: 120px 0 4rem;
-  background-color: #1a1714;
-  color: white;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .portfolio-header {
@@ -354,7 +334,7 @@ const goToImage = (index) => {
   font-weight: 300;
   margin-bottom: 2.5rem;
   letter-spacing: 1px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   position: relative;
   display: inline-block;
 }
@@ -366,7 +346,7 @@ const goToImage = (index) => {
   left: 0;
   width: 100%;
   height: 1px;
-  background-color: var(--accent-clay, #c78c60);
+  background-color: var(--accent-clay);
 }
 
 .portfolio-intro {
@@ -374,9 +354,9 @@ const goToImage = (index) => {
   margin: 0 auto;
   font-size: 1.2rem;
   line-height: 1.8;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-body);
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
 }
 
 .category-header {
@@ -389,62 +369,16 @@ const goToImage = (index) => {
 .category-header h2 {
   font-size: 2.2rem;
   font-weight: 300;
-  color: white;
-  font-family: 'Cormorant Garamond', serif;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
   position: relative;
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .installations-header {
   margin-top: 3rem;
-}
-
-.portfolio-categories {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 3rem auto;
-  flex-wrap: wrap;
-  max-width: 700px;
-  padding: 0 2rem;
-}
-
-.category-button {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.6rem 1.2rem;
-  color: white;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 0;
-  font-family: 'Raleway', sans-serif;
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.5px;
-}
-
-.category-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background-color: var(--accent-clay, #c78c60);
-  transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
-  z-index: -1;
-}
-
-.category-button:hover,
-.category-button.active {
-  border-color: var(--accent-clay, #c78c60);
-}
-
-.category-button.active::before {
-  width: 100%;
 }
 
 .works-grid {
@@ -461,8 +395,13 @@ const goToImage = (index) => {
   position: relative;
   overflow: hidden;
   border-radius: 2px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-cubic);
+}
+
+.work-item:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 2px;
 }
 
 .work-item::before {
@@ -472,7 +411,7 @@ const goToImage = (index) => {
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-light);
   z-index: 2;
   pointer-events: none;
 }
@@ -523,7 +462,7 @@ const goToImage = (index) => {
 }
 
 .work-info {
-  color: white;
+  color: var(--text-primary);
   z-index: 1;
 }
 
@@ -531,7 +470,7 @@ const goToImage = (index) => {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
   font-weight: 300;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   position: relative;
   display: inline-block;
   padding-right: 30px;
@@ -540,54 +479,27 @@ const goToImage = (index) => {
 .work-meta {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-body);
 }
 
-.view-more {
-  color: var(--accent-clay, #c78c60);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 400;
-  position: relative;
-  font-family: 'Raleway', sans-serif;
-  transition: all 0.3s ease;
+/* Modal transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
   opacity: 0;
-  transform: translateY(10px);
-  display: inline-block;
-  margin-top: 10px;
 }
 
-.work-item:hover .view-more {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.view-more::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--accent-clay, #c78c60);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.work-item:hover .view-more::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Work Modal Styling */
 .work-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(26, 23, 20, 0.95);
+  background-color: var(--bg-primary-95);
   z-index: 1010;
   display: flex;
   justify-content: center;
@@ -602,21 +514,26 @@ const goToImage = (index) => {
   right: 2rem;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-primary);
   font-size: 2rem;
   cursor: pointer;
   z-index: 1011;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all var(--transition-smooth);
 }
 
 .close-button:hover {
-  color: var(--accent-clay, #c78c60);
+  color: var(--accent-clay);
   transform: rotate(90deg);
+}
+
+.close-button:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 2px;
 }
 
 .modal-content {
@@ -625,10 +542,10 @@ const goToImage = (index) => {
   max-width: 1200px;
   height: 85vh;
   width: 100%;
-  background-color: #1a1714;
+  background-color: var(--bg-primary);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
 }
 
 .modal-image-container {
@@ -644,7 +561,7 @@ const goToImage = (index) => {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  transition: transform 0.5s ease;
+  transition: opacity 0.3s ease;
   position: relative;
 }
 
@@ -657,24 +574,22 @@ const goToImage = (index) => {
   background: linear-gradient(to top, rgba(26, 23, 20, 0.3), transparent 25%);
 }
 
-/* Image Navigation Buttons */
 .nav-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(26, 23, 20, 0.6);
-  border: none;
-  width: 40px;
-  height: 40px;
+  border: 1px solid var(--border-light);
+  width: 44px;
+  height: 44px;
   font-size: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-primary);
   cursor: pointer;
   z-index: 1;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-smooth);
 }
 
 .nav-button.prev {
@@ -686,11 +601,15 @@ const goToImage = (index) => {
 }
 
 .nav-button:hover {
-  background: var(--accent-clay, #c78c60);
-  color: white;
+  background: var(--accent-clay);
+  color: var(--text-primary);
 }
 
-/* Image Indicators */
+.nav-button:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 2px;
+}
+
 .image-indicators {
   position: absolute;
   bottom: 1rem;
@@ -712,31 +631,35 @@ const goToImage = (index) => {
   border: none;
   cursor: pointer;
   border-radius: 0;
-  transition: all 0.3s ease;
+  transition: all var(--transition-smooth);
   padding: 0;
   transform: rotate(45deg);
 }
 
 .indicator.active {
-  background-color: var(--accent-clay, #c78c60);
+  background-color: var(--accent-clay);
   transform: rotate(45deg) scale(1.2);
   box-shadow: 0 0 5px rgba(199, 140, 96, 0.5);
 }
 
-/* Modal Info Section */
+.indicator:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 4px;
+}
+
 .modal-info {
   padding: 2rem;
   overflow-y: auto;
   flex: 1;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .modal-info h2 {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   font-weight: 300;
-  color: white;
-  font-family: 'Cormorant Garamond', serif;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
   position: relative;
   display: inline-block;
 }
@@ -748,7 +671,7 @@ const goToImage = (index) => {
   left: 0;
   width: 100%;
   height: 1px;
-  background-color: var(--accent-clay, #c78c60);
+  background-color: var(--accent-clay);
 }
 
 .work-details {
@@ -756,7 +679,7 @@ const goToImage = (index) => {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin: 2rem 0;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-body);
 }
 
 .detail-item {
@@ -767,25 +690,25 @@ const goToImage = (index) => {
 
 .detail-label {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-faint);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .detail-value {
   font-size: 1.1rem;
-  color: white;
+  color: var(--text-primary);
 }
 
 .work-description {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.85);
-  font-family: 'Raleway', sans-serif;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
   font-weight: 300;
+  white-space: pre-line;
 }
 
-/* Responsive Styles */
 @media (min-width: 768px) {
   .modal-content {
     flex-direction: row;
@@ -801,7 +724,7 @@ const goToImage = (index) => {
   .modal-info {
     width: 40%;
     border-top: none;
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 1px solid var(--border-subtle);
   }
 }
 
@@ -832,8 +755,8 @@ const goToImage = (index) => {
   }
 
   .nav-button {
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     font-size: 1.4rem;
   }
 
@@ -862,19 +785,14 @@ const goToImage = (index) => {
     font-size: 1rem;
   }
 
-  .category-button {
-    font-size: 0.8rem;
-    padding: 0.5rem 1rem;
-  }
-
   .close-button {
     top: 1rem;
     right: 1rem;
   }
 
   .nav-button {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     font-size: 1.2rem;
   }
 

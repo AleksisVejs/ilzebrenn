@@ -5,6 +5,12 @@ import { useRouter } from 'vue-router'
 const { t } = useI18n()
 const router = useRouter()
 
+const works = [
+  { id: 'funguy', titleKey: 'portfolio.works.funguy.title', imageClass: 'funguy' },
+  { id: 'rainbow', titleKey: 'portfolio.works.rainbow.title', imageClass: 'rainbow' },
+  { id: 'atgazend', titleKey: 'portfolio.works.atgazend.title', imageClass: 'atgazend' },
+]
+
 const navigateToPortfolio = () => {
   router.push('/portfolio')
 }
@@ -12,34 +18,27 @@ const navigateToPortfolio = () => {
 
 <template>
   <div class="home">
-    <div class="hero">
+    <div class="hero" role="img" :aria-label="t('home.title') + ' — ' + t('home.subtitle')">
       <h1 class="artist-name">{{ t('home.title') }}</h1>
       <p class="artist-title">{{ t('home.subtitle') }}</p>
     </div>
 
     <div class="featured-works">
-      <div @click="navigateToPortfolio" class="work-preview funguy">
+      <div
+        v-for="work in works"
+        :key="work.id"
+        class="work-preview"
+        :class="work.imageClass"
+        role="button"
+        :tabindex="0"
+        :aria-label="t(work.titleKey) + ' — ' + t('nav.portfolio')"
+        @click="navigateToPortfolio"
+        @keydown.enter="navigateToPortfolio"
+        @keydown.space.prevent="navigateToPortfolio"
+      >
         <div class="work-info">
           <div class="title-container">
-            <h2>Fun-guy</h2>
-          </div>
-          <span class="view-more">{{ t('nav.portfolio') }}</span>
-        </div>
-      </div>
-
-      <div @click="navigateToPortfolio" class="work-preview rainbow">
-        <div class="work-info">
-          <div class="title-container">
-            <h2>Varavīksnene</h2>
-          </div>
-          <span class="view-more">{{ t('nav.portfolio') }}</span>
-        </div>
-      </div>
-
-      <div @click="navigateToPortfolio" class="work-preview atgazend">
-        <div class="work-info">
-          <div class="title-container">
-            <h2>Atgazend</h2>
+            <h2>{{ t(work.titleKey) }}</h2>
           </div>
           <span class="view-more">{{ t('nav.portfolio') }}</span>
         </div>
@@ -91,13 +90,13 @@ const navigateToPortfolio = () => {
   font-weight: 300;
   margin-bottom: 1.5rem;
   letter-spacing: 3px;
-  color: white;
+  color: var(--text-primary);
   position: relative;
   z-index: 3;
   text-align: center;
   width: 100%;
   padding: 0 1rem;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   animation: fadeInUp 1.2s ease-out forwards;
 }
@@ -105,14 +104,14 @@ const navigateToPortfolio = () => {
 .artist-title {
   font-size: 1.8rem;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   letter-spacing: 2px;
   position: relative;
   z-index: 3;
   text-align: center;
   width: 100%;
   padding: 0 1rem;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-body);
   text-transform: uppercase;
   animation: fadeInUp 1.2s 0.3s ease-out forwards;
   opacity: 0;
@@ -134,7 +133,7 @@ const navigateToPortfolio = () => {
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   padding: 5rem 2rem;
-  background-color: #1a1714;
+  background-color: var(--bg-primary);
 }
 
 .work-preview {
@@ -142,9 +141,14 @@ const navigateToPortfolio = () => {
   position: relative;
   overflow: hidden;
   border-radius: 2px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+}
+
+.work-preview:focus-visible {
+  outline: 2px solid var(--accent-clay);
+  outline-offset: 2px;
 }
 
 .work-preview::before {
@@ -167,7 +171,7 @@ const navigateToPortfolio = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-light);
   z-index: 3;
   pointer-events: none;
 }
@@ -204,11 +208,11 @@ const navigateToPortfolio = () => {
     rgba(26, 23, 20, 0.8) 100%,
     rgba(26, 23, 20, 0)
   );
-  color: white;
+  color: var(--text-primary);
   z-index: 2;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--transition-bounce);
   transform: translateY(0);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -244,7 +248,7 @@ const navigateToPortfolio = () => {
   font-size: 2.2rem;
   margin-bottom: 0;
   font-weight: 300;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   position: relative;
   display: inline-block;
   transition: transform 0.4s ease;
@@ -263,7 +267,7 @@ const navigateToPortfolio = () => {
   left: 0;
   width: 30px;
   height: 1px;
-  background-color: var(--accent-clay, #c78c60);
+  background-color: var(--accent-clay);
   transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -278,8 +282,8 @@ const navigateToPortfolio = () => {
   font-size: 1.1rem;
   margin-top: 0.5rem;
   position: relative;
-  font-family: 'Raleway', sans-serif;
-  transition: all 0.3s ease;
+  font-family: var(--font-body);
+  transition: all var(--transition-smooth);
   opacity: 1;
   transform: translateY(0);
   padding-right: 30px;
@@ -290,31 +294,22 @@ const navigateToPortfolio = () => {
 
 .work-preview:hover .view-more {
   transform: translateY(0) scale(1.05);
-  color: var(--accent-clay, #c78c60);
-}
-
-.view-more::before {
-  display: none;
-}
-
-.work-preview:hover .view-more::before {
-  display: none;
+  color: var(--accent-clay);
 }
 
 .view-more::after {
-  content: '→';
+  content: '\2192';
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-smooth);
 }
 
 .work-preview:hover .view-more::after {
   transform: translate(5px, -50%);
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .featured-works {
     grid-template-columns: 1fr;

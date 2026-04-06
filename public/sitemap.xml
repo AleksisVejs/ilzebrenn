@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://aleksisvejs.github.io/ilzebrenn/</loc>
+    <loc>https://ilzebrenn.com/</loc>
     <lastmod>2025-05-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://aleksisvejs.github.io/ilzebrenn/portfolio</loc>
+    <loc>https://ilzebrenn.com/portfolio</loc>
     <lastmod>2025-05-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aleksisvejs.github.io/ilzebrenn/biography</loc>
+    <loc>https://ilzebrenn.com/biography</loc>
     <lastmod>2025-05-03</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aleksisvejs.github.io/ilzebrenn/contact</loc>
+    <loc>https://ilzebrenn.com/contact</loc>
     <lastmod>2025-05-03</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
-</urlset> 
+</urlset>

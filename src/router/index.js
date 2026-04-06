@@ -24,22 +24,20 @@ const router = createRouter({
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
     },
-    // Add a catch-all route to handle 404s properly
     {
       path: '/:pathMatch(.*)*',
-      redirect: (to) => {
-        console.warn('Route not found, redirecting to home:', to.fullPath)
-        return '/'
-      },
+      name: 'not-found',
+      component: () => import('../views/NotFoundView.vue'),
     },
   ],
-  // Add scroll behavior for better UX
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
-    } else {
-      return { top: 0 }
     }
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
+    return { top: 0 }
   },
 })
 

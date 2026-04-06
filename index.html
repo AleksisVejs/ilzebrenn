@@ -1,64 +1,91 @@
 <!doctype html>
-<html lang="en">
+<html lang="lv">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Ilze Erba-Brenholma - Textile Artist Portfolio" />
-    <title>Ilzebrenn</title>
-    <!-- Improved redirect handling for SPA on GitHub Pages -->
+    <meta name="description" content="Ilze Brenn - Textile artist exploring the intersection of natural materials and contemporary art through installations and sculptural forms. Based in Riga, Latvia." />
+    <meta name="author" content="Ilze Brenn" />
+    <meta name="keywords" content="Ilze Brenn, textile art, textile artist, Latvia, installations, contemporary art, Riga" />
+    <title>Ilze Brenn — Textile Artist</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ilze Brenn — Textile Artist" />
+    <meta property="og:description" content="Textile artist exploring the intersection of natural materials and contemporary art through installations and sculptural forms." />
+    <meta property="og:url" content="https://ilzebrenn.com/" />
+    <meta property="og:image" content="https://ilzebrenn.com/images/hero-bg.jpg" />
+    <meta property="og:site_name" content="Ilze Brenn" />
+    <meta property="og:locale" content="lv_LV" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ilze Brenn — Textile Artist" />
+    <meta name="twitter:description" content="Textile artist exploring the intersection of natural materials and contemporary art through installations and sculptural forms." />
+    <meta name="twitter:image" content="https://ilzebrenn.com/images/hero-bg.jpg" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://ilzebrenn.com/" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ilze Brenn",
+      "alternateName": "Ilze Erba-Brenholma",
+      "jobTitle": "Textile Artist",
+      "url": "https://ilzebrenn.com",
+      "image": "https://ilzebrenn.com/images/artist-portrait.jpg",
+      "email": "ilzebrenn@gmail.com",
+      "telephone": "+371 25152311",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Riga",
+        "addressCountry": "LV"
+      },
+      "sameAs": [
+        "https://instagram.com/e.brenn"
+      ],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Art Academy of Latvia"
+      },
+      "knowsAbout": ["Textile Art", "Installation Art", "Contemporary Art", "Fiber Art"]
+    }
+    </script>
+
+    <!-- Redirect handling for SPA on GitHub Pages -->
     <script type="text/javascript">
       ;(function () {
-        // Check if we have a redirect from the 404 page
         if (window.location.search && window.location.search.includes('redirect=true')) {
-          // Get the stored path from sessionStorage
           const redirectPath = sessionStorage.getItem('redirectPath') || '/'
-
-          // Remove the redirect flag from sessionStorage to prevent loops
           sessionStorage.removeItem('redirectPath')
-
-          // Replace current URL with the clean path
           window.history.replaceState(null, null, redirectPath)
           return
         }
-
-        // Handle legacy GitHub Pages redirects (for backwards compatibility)
         if (window.location.search && window.location.search.startsWith('?/')) {
-          // Extract the path if possible
           const pathMatch = window.location.search.match(/\?\/(.*?)($|&|~and~)/)
           if (pathMatch && pathMatch[1]) {
             let cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
-
-            // Clean up any percent encoding or unwanted characters
             try {
               cleanPath = decodeURIComponent(cleanPath)
             } catch (e) {
-              // If decoding fails, use the raw path
               console.error('Failed to decode URL', e)
             }
-
-            // Remove any remaining % characters
             cleanPath = cleanPath.replace(/%/g, '')
-
             window.history.replaceState(null, null, cleanPath)
           }
         }
-
-        // Handle direct % characters in the pathname
         if (window.location.pathname.includes('%')) {
           let cleanPath = window.location.pathname
-
-          // Clean up any percent encoding or unwanted characters
           try {
             cleanPath = decodeURIComponent(cleanPath)
           } catch (e) {
-            // If decoding fails, use the raw path
             console.error('Failed to decode URL', e)
           }
-
-          // Remove any remaining % characters
           cleanPath = cleanPath.replace(/%/g, '')
-
           window.history.replaceState(null, null, cleanPath)
         }
       })()

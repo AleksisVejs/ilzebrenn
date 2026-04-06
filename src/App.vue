@@ -1,79 +1,53 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import router from './router'
 
 const { t, locale } = useI18n()
 const showMobileMenu = ref(false)
 const isScrolled = ref(false)
+const showScrollTop = ref(false)
 
-// Robust URL cleanup function for GitHub Pages
 const cleanupUrl = () => {
   const location = window.location
-
-  // Only clean up infinite redirect loops with many ~and~ parameters
   if (
     location.search &&
     location.search.includes('~and~') &&
     location.search.split('~and~').length > 3
   ) {
-    // Extract the path from the query parameter (GitHub Pages SPA pattern)
     const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
     if (pathMatch && pathMatch[1]) {
-      // Get just the clean path without parameters
       const cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
-      // Replace URL with the clean path
       window.history.replaceState(null, null, cleanPath)
       return
     }
   }
-
-  // DO NOT clean up /?/ pattern on initial load - let the router handle it
-  // Only clean up once navigation has completed
 }
 
-// This function should be called after navigation is complete
 const cleanupUrlAfterNavigation = () => {
   const location = window.location
-
-  // Now it's safe to clean up the URL if it still has the /?/ format
   if (location.search && location.search.includes('/?/')) {
-    // Extract the path
     const pathMatch = location.search.match(/\?\/(.*?)($|&|~and~)/)
     if (pathMatch && pathMatch[1]) {
       let cleanPath = '/' + pathMatch[1].split('&')[0].split('~and~')[0]
-
-      // Clean up any percent encoding or unwanted characters
       try {
         cleanPath = decodeURIComponent(cleanPath)
       } catch (e) {
-        // If decoding fails, use the raw path
         console.error('Failed to decode URL', e)
       }
-
-      // Remove any remaining % characters
       cleanPath = cleanPath.replace(/%/g, '')
-
       window.history.replaceState(null, null, cleanPath)
     }
   }
-
-  // Also handle direct pathname issues with percent characters
   if (location.pathname.includes('%')) {
     let cleanPath = location.pathname
-
-    // Clean up any percent encoding or unwanted characters
     try {
       cleanPath = decodeURIComponent(cleanPath)
     } catch (e) {
-      // If decoding fails, use the raw path
       console.error('Failed to decode URL', e)
     }
-
-    // Remove any remaining % characters
     cleanPath = cleanPath.replace(/%/g, '')
-
     window.history.replaceState(null, null, cleanPath)
   }
 }
@@ -81,34 +55,57 @@ const cleanupUrlAfterNavigation = () => {
 const toggleLanguage = () => {
   locale.value = locale.value === 'en' ? 'lv' : 'en'
   localStorage.setItem('language', locale.value)
-  // Call simplified URL cleanup
+  document.documentElement.lang = locale.value
   cleanupUrl()
 }
 
 const toggleMobileMenu = () => {
   showMobileMenu.value = !showMobileMenu.value
+  if (showMobileMenu.value) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+}
+
+const closeMobileMenu = () => {
+  showMobileMenu.value = false
+  document.body.style.overflow = ''
 }
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
+  showScrollTop.value = window.scrollY > 400
 }
 
-onMounted(() => {
-  // Clean up only redirect loops on initial load
-  cleanupUrl()
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
-  // Listen for router changes to clean up URL after navigation
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && showMobileMenu.value) {
+    closeMobileMenu()
+  }
+}
+
+watch(locale, (newLocale) => {
+  document.documentElement.lang = newLocale
+})
+
+onMounted(() => {
+  document.documentElement.lang = locale.value
+  cleanupUrl()
   router.afterEach(() => {
-    // Now it's safe to clean up the URL
     cleanupUrlAfterNavigation()
   })
-
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('keydown', handleKeydown)
   handleScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
@@ -122,6 +119,9 @@ onUnmounted(() => {
       <button
         class="mobile-menu-toggle"
         :class="{ active: showMobileMenu }"
+        :aria-label="showMobileMenu ? 'Close menu' : 'Open menu'"
+        aria-controls="main-nav"
+        :aria-expanded="showMobileMenu"
         @click="toggleMobileMenu"
       >
         <span></span>
@@ -129,32 +129,41 @@ onUnmounted(() => {
         <span></span>
       </button>
 
-      <nav :class="{ 'mobile-open': showMobileMenu }">
+      <nav id="main-nav" :class="{ 'mobile-open': showMobileMenu }" role="navigation" :aria-label="t('nav.home')">
         <button
           class="language-toggle"
           @click="toggleLanguage"
-          :class="{ active: locale === 'en' }"
+          :aria-label="locale === 'lv' ? 'Switch to English' : 'Pārslēgt uz latviešu'"
         >
           <span class="lang-option" :class="{ selected: locale === 'lv' }">LV</span>
           <span class="lang-separator">/</span>
           <span class="lang-option" :class="{ selected: locale === 'en' }">EN</span>
         </button>
-        <RouterLink to="/" @click="showMobileMenu = false">{{ t('nav.home') }}</RouterLink>
-        <RouterLink to="/portfolio" @click="showMobileMenu = false">{{
-          t('nav.portfolio')
-        }}</RouterLink>
-        <RouterLink to="/biography" @click="showMobileMenu = false">{{
-          t('nav.biography')
-        }}</RouterLink>
-        <RouterLink to="/contact" @click="showMobileMenu = false">{{
-          t('nav.contact')
-        }}</RouterLink>
+        <RouterLink to="/" @click="closeMobileMenu">{{ t('nav.home') }}</RouterLink>
+        <RouterLink to="/portfolio" @click="closeMobileMenu">{{ t('nav.portfolio') }}</RouterLink>
+        <RouterLink to="/biography" @click="closeMobileMenu">{{ t('nav.biography') }}</RouterLink>
+        <RouterLink to="/contact" @click="closeMobileMenu">{{ t('nav.contact') }}</RouterLink>
       </nav>
     </header>
 
     <main>
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
     </main>
+
+    <button
+      v-show="showScrollTop"
+      class="scroll-top-btn"
+      @click="scrollToTop"
+      aria-label="Scroll to top"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15" />
+      </svg>
+    </button>
 
     <footer>
       <p>&copy; {{ new Date().getFullYear() }} Ilze Brenn</p>
@@ -163,8 +172,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap');
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -178,7 +185,7 @@ body {
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: #1a1714;
+  background-color: var(--bg-primary);
   background-image: linear-gradient(to bottom, rgba(26, 23, 20, 0.97), rgba(26, 23, 20, 0.95));
   background-blend-mode: overlay;
 }
@@ -211,6 +218,22 @@ main {
   padding: 0;
 }
 
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -223,12 +246,12 @@ header {
   right: 0;
   width: 100%;
   z-index: 1000;
-  transition: all 0.4s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-bounce);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 header.scrolled {
-  background-color: rgba(26, 23, 20, 0.92);
+  background-color: var(--bg-primary-92);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -237,11 +260,11 @@ header.scrolled {
 .logo a {
   font-size: 1.8rem;
   font-weight: 300;
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   letter-spacing: 2px;
-  transition: color 0.3s ease;
-  font-family: 'Cormorant Garamond', serif;
+  transition: color var(--transition-smooth);
+  font-family: var(--font-heading);
 }
 
 header.scrolled .logo a {
@@ -255,14 +278,14 @@ nav {
 }
 
 nav a {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 400;
   position: relative;
   padding: 0.5rem 0;
-  transition: all 0.3s ease;
-  font-family: 'Raleway', sans-serif;
+  transition: all var(--transition-smooth);
+  font-family: var(--font-body);
 }
 
 header.scrolled nav a {
@@ -276,7 +299,7 @@ nav a::after {
   left: 0;
   width: 0;
   height: 1px;
-  background-color: var(--accent-clay, #c78c60);
+  background-color: var(--accent-clay);
   transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
   opacity: 0.9;
 }
@@ -286,44 +309,44 @@ nav a.router-link-active::after {
   width: 100%;
 }
 
+nav a:hover {
+  opacity: 0.7;
+}
+
 .language-toggle {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
   border-radius: 0;
   padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-smooth);
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-body);
 }
 
 header.scrolled .language-toggle {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--border-medium);
   color: rgba(255, 255, 255, 0.9);
 }
 
 .language-toggle:hover {
-  background-color: rgba(199, 140, 96, 0.1);
-  border-color: var(--accent-clay, #c78c60);
-}
-
-header.scrolled .language-toggle:hover {
-  background-color: rgba(199, 140, 96, 0.1);
+  background-color: var(--accent-clay-light);
+  border-color: var(--accent-clay);
 }
 
 .lang-option {
   opacity: 0.6;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-smooth);
 }
 
 .lang-option.selected {
   opacity: 1;
   font-weight: 500;
-  color: var(--accent-clay, #c78c60);
+  color: var(--accent-clay);
 }
 
 .lang-separator {
@@ -348,8 +371,8 @@ header.scrolled .language-toggle:hover {
   display: block;
   width: 100%;
   height: 2px;
-  background-color: white;
-  transition: all 0.3s ease;
+  background-color: var(--text-primary);
+  transition: all var(--transition-smooth);
 }
 
 .mobile-menu-toggle.active span:nth-child(1) {
@@ -364,27 +387,42 @@ header.scrolled .language-toggle:hover {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-@media (min-width: 1400px) {
-  html,
-  body,
-  #app,
-  .app-container,
-  main {
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-  }
+/* Scroll to top button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  background-color: var(--bg-primary-92);
+  border: 1px solid var(--border-light);
+  color: var(--accent-clay);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: all var(--transition-smooth);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.scroll-top-btn:hover {
+  background-color: var(--accent-clay);
+  color: var(--text-primary);
+  border-color: var(--accent-clay);
+  transform: translateY(-3px);
 }
 
 footer {
   background-color: rgba(26, 23, 20, 0.98);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
   text-align: center;
   padding: 2rem;
   font-size: 0.9rem;
   position: relative;
-  font-family: 'Raleway', sans-serif;
-  border-top: 1px solid rgba(199, 140, 96, 0.2);
+  font-family: var(--font-body);
+  border-top: 1px solid var(--border-accent);
 }
 
 footer::before {
@@ -395,7 +433,7 @@ footer::before {
   transform: translateX(-50%);
   width: 120px;
   height: 5px;
-  background: linear-gradient(to right, transparent, var(--accent-clay, #c78c60), transparent);
+  background: linear-gradient(to right, transparent, var(--accent-clay), transparent);
 }
 
 @media (max-width: 768px) {
@@ -416,7 +454,7 @@ footer::before {
     transform: translateX(100%);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all var(--transition-bounce);
     z-index: 1000;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -430,19 +468,19 @@ footer::before {
   }
 
   nav a {
-    color: white;
+    color: var(--text-primary);
     font-size: 2rem;
     margin: 0.8rem 0;
     padding: 0.5rem 0;
     opacity: 0.8;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     text-align: center;
   }
 
   nav a:hover,
   nav a.router-link-active {
     opacity: 1;
-    color: var(--accent-clay, #c78c60);
+    color: var(--accent-clay);
   }
 
   nav a::after {
@@ -452,8 +490,8 @@ footer::before {
 
   .language-toggle {
     margin: 2rem auto 0;
-    border-color: rgba(255, 255, 255, 0.2);
-    color: white;
+    border-color: var(--border-medium);
+    color: var(--text-primary);
     font-size: 1rem;
     padding: 0.6rem 1.2rem;
   }
@@ -461,21 +499,12 @@ footer::before {
   .mobile-menu-toggle span {
     width: 100%;
     height: 2px;
-    background-color: white;
-    transition: all 0.3s ease;
+    background-color: var(--text-primary);
+    transition: all var(--transition-smooth);
   }
 
   .mobile-menu-toggle.active span {
-    background-color: white;
+    background-color: var(--text-primary);
   }
-}
-
-nav a:hover::after,
-nav a.router-link-active::after {
-  width: 100%;
-}
-
-nav a:hover {
-  opacity: 0.7;
 }
 </style>

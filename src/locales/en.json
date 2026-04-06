@@ -3,7 +3,6 @@
     "home": "Home",
     "portfolio": "Portfolio",
     "biography": "Biography",
-    "exhibitions": "Exhibitions",
     "contact": "Contact"
   },
   "home": {
@@ -48,7 +47,7 @@
     "timeline": "Timeline and Achievements",
     "background": {
       "title": "Background and Early Career",
-      "content": "Known professionally as Ilze Brenn, I studied at the Art Academy of Latvia, where I developed my unique approach to textile art combining traditional craftsmanship with contemporary artistic expression."
+      "content": "Known professionally as Ilze Brenn, I graduated from the Art Academy of Latvia with both a Bachelor's and Master's degree, where I developed my unique approach to textile art combining traditional craftsmanship with contemporary artistic expression."
     },
     "exhibitions": {
       "title": "Exhibition Participation",
@@ -60,7 +59,7 @@
     },
     "education": {
       "title": "Education",
-      "content": "2023 - present Art Academy of Latvia (Master's degree)\n2016 – 2020 Art Academy of Latvia (Bachelor's degree in Art)"
+      "content": "2023 – 2025 Art Academy of Latvia (Master's degree)\n2016 – 2020 Art Academy of Latvia (Bachelor's degree in Art)"
     },
     "current": {
       "title": "Current Focus",
@@ -77,6 +76,20 @@
     "instagram": "Instagram",
     "instagram_desc": "Follow my latest work and behind-the-scenes content",
     "location": "Location",
-    "location_desc": "Based in Riga, Latvia."
+    "location_desc": "Based in Riga, Latvia.",
+    "form_title": "Send a Message",
+    "form_desc": "Fill out the form below and I'll get back to you as soon as possible.",
+    "form_name": "Your Name",
+    "form_email": "Your Email",
+    "form_message": "Your Message",
+    "form_send": "Send Message",
+    "form_sending": "Sending...",
+    "form_success": "Message sent successfully! I'll get back to you soon.",
+    "form_error": "Something went wrong. Please try emailing directly."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
   }
 }

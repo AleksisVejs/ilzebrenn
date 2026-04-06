@@ -3,7 +3,6 @@
     "home": "Sākums",
     "portfolio": "Portfolio",
     "biography": "Biogrāfija",
-    "exhibitions": "Izstādes",
     "contact": "Kontakti"
   },
   "home": {
@@ -48,7 +47,7 @@
     "timeline": "Laika līnija un sasniegumi",
     "background": {
       "title": "Pamatinformācija un karjeras sākums",
-      "content": "Profesionāli pazīstama kā Ilze Brenn, es studēju Latvijas Mākslas akadēmijā, kur attīstīju savu unikālo pieeju tekstilmākslai, apvienojot tradicionālo amatniecību ar mūsdienu mākslas izpausmi."
+      "content": "Profesionāli pazīstama kā Ilze Brenn, esmu absolvējusi Latvijas Mākslas akadēmiju ar bakalaura un maģistra grādu, kur attīstīju savu unikālo pieeju tekstilmākslai, apvienojot tradicionālo amatniecību ar mūsdienu mākslas izpausmi."
     },
     "exhibitions": {
       "title": "Dalība izstādēs",
@@ -60,7 +59,7 @@
     },
     "education": {
       "title": "Izglītība",
-      "content": "2023 - šim brīdim Latvijas Mākslas akadēmija (Maģistrantūra)\n2016 – 2020 Latvijas Mākslas akadēmija (Bakalaura grāds mākslā)"
+      "content": "2023 – 2025 Latvijas Mākslas akadēmija (Maģistrantūra)\n2016 – 2020 Latvijas Mākslas akadēmija (Bakalaura grāds mākslā)"
     },
     "current": {
       "title": "Pašreizējais fokuss",
@@ -77,6 +76,20 @@
     "instagram": "Instagram",
     "instagram_desc": "Sekojiet maniem jaunākajiem darbiem un aizkulisēm",
     "location": "Atrašanās vieta",
-    "location_desc": "Bāzēta Rīgā, Latvijā."
+    "location_desc": "Bāzēta Rīgā, Latvijā.",
+    "form_title": "Nosūtīt ziņu",
+    "form_desc": "Aizpildiet zemāk esošo formu, un es sazināšos ar jums pēc iespējas ātrāk.",
+    "form_name": "Jūsu vārds",
+    "form_email": "Jūsu e-pasts",
+    "form_message": "Jūsu ziņojums",
+    "form_send": "Nosūtīt ziņu",
+    "form_sending": "Nosūta...",
+    "form_success": "Ziņojums veiksmīgi nosūtīts! Sazināšos ar jums drīz.",
+    "form_error": "Kaut kas nogāja greizi. Lūdzu, rakstiet tieši uz e-pastu."
+  },
+  "notFound": {
+    "title": "Lapa nav atrasta",
+    "message": "Lapa, kuru meklējat, neeksistē vai ir pārvietota.",
+    "backHome": "Atpakaļ uz sākumu"
   }
 }
